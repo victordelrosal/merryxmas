@@ -1258,9 +1258,7 @@
   const fontSizes = [
     { scale: 1.0, label: '100%' },
     { scale: 1.25, label: '125%' },
-    { scale: 1.5, label: '150%' },
-    { scale: 2.0, label: '200%' },
-    { scale: 2.5, label: '250%' }
+    { scale: 1.5, label: '150%' }
   ];
   let fontSizeIndex = 0;
   const fontSizeIndicator = document.getElementById('fontSizeIndicator');
@@ -1556,9 +1554,11 @@
     container.innerHTML = '';
     players = {};
     playerReady = {};
-    const origin = window.location.origin && window.location.origin !== 'null'
-      ? window.location.origin
-      : null;
+    
+    // Only send origin if running on a server (http/https)
+    // Sending 'file://' or 'null' often causes the postMessage mismatch error
+    const isServer = window.location.protocol.startsWith('http');
+    const origin = isServer ? window.location.origin : undefined;
 
     musicTracks.forEach((videoId, i) => {
       if (!videoId) return;
@@ -1574,6 +1574,7 @@
           autoplay: 0,
           controls: 0,
           disablekb: 1,
+          enablejsapi: 1, // Explicitly enable API
           fs: 0,
           loop: 1,
           modestbranding: 1,
