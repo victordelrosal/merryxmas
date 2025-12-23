@@ -2171,7 +2171,7 @@
     });
   }
 
-  function stopAllTracks() {
+  function stopAllTracks(clearSaved = false) {
     Object.keys(players).forEach(key => {
       const i = parseInt(key);
       if (players[i] && typeof players[i].pauseVideo === 'function') {
@@ -2188,6 +2188,12 @@
     totalTimeEl.textContent = '0:00';
     updatePlayPauseIcon();
     updateTrackDisplay();
+
+    // Clear saved position if explicitly stopped
+    if (clearSaved) {
+      localStorage.removeItem('xmasCard_currentTrack');
+      localStorage.removeItem('xmasCard_trackTime');
+    }
   }
 
   function playTrack(index) {
@@ -2235,7 +2241,7 @@
     }
   }
 
-  // Update progress bar and time display
+  // Update progress bar and time display + save to localStorage
   setInterval(() => {
     if (currentTrack >= 0 && players[currentTrack] && playerReady[currentTrack]) {
       try {
@@ -2247,10 +2253,50 @@
           progressBar.style.width = percent + '%';
           currentTimeEl.textContent = formatTime(time);
           totalTimeEl.textContent = formatTime(duration);
+
+          // Save current track and time to localStorage
+          if (isPlaying) {
+            localStorage.setItem('xmasCard_currentTrack', currentTrack);
+            localStorage.setItem('xmasCard_trackTime', time);
+          }
         }
       } catch(e) {}
     }
   }, 250);
+
+  // Restore track position from localStorage on page load
+  function restoreTrackPosition() {
+    const savedTrack = localStorage.getItem('xmasCard_currentTrack');
+    const savedTime = localStorage.getItem('xmasCard_trackTime');
+
+    if (savedTrack !== null && savedTime !== null) {
+      const trackIdx = parseInt(savedTrack);
+      const time = parseFloat(savedTime);
+
+      if (trackIdx >= 0 && trackIdx < musicTracks.length && playerReady[trackIdx]) {
+        currentTrack = trackIdx;
+        updateTrackDisplay();
+
+        // Seek to saved position and start playing
+        players[trackIdx].seekTo(time, true);
+        players[trackIdx].playVideo();
+      }
+    }
+  }
+
+  // Wait for first player to be ready, then restore position
+  const checkPlayersReady = setInterval(() => {
+    const savedTrack = localStorage.getItem('xmasCard_currentTrack');
+    if (savedTrack !== null) {
+      const trackIdx = parseInt(savedTrack);
+      if (playerReady[trackIdx]) {
+        clearInterval(checkPlayersReady);
+        restoreTrackPosition();
+      }
+    } else {
+      clearInterval(checkPlayersReady);
+    }
+  }, 500);
 
   // Progress bar click to seek
   progressContainer.addEventListener('click', (e) => {
