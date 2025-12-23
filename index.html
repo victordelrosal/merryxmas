@@ -1576,19 +1576,13 @@
 
   sidebarToggle.addEventListener('click', toggleSidebar);
 
-  // Clicking icons in collapsed mode: trigger the button action AND expand
+  // Clicking icons toggles the control (works in both collapsed and expanded modes)
   document.querySelectorAll('.control-icon').forEach(icon => {
     icon.addEventListener('click', (e) => {
-      if (!sidebar.classList.contains('expanded')) {
-        // Find the associated button in this control group and click it
-        const controlGroup = icon.closest('.control-group');
-        const btn = controlGroup?.querySelector('.control-btn');
-        if (btn) {
-          btn.click();
-        }
-        // Also expand the sidebar and sync musicbar
-        sidebar.classList.add('expanded');
-        musicbarEl.classList.add('sidebar-open');
+      const controlGroup = icon.closest('.control-group');
+      const btn = controlGroup?.querySelector('.control-btn');
+      if (btn) {
+        btn.click();
       }
     });
   });
