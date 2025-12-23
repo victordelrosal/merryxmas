@@ -1357,11 +1357,11 @@
 
   function mix(a,b,u){ return { r: lerp(a.r,b.r,u), g: lerp(a.g,b.g,u), b: lerp(a.b,b.b,u) }; }
 
-  // Background bokeh
+  // Background bokeh - reduced count for performance
   const bgBokeh = [];
   function initBg() {
     bgBokeh.length = 0;
-    const n = Math.floor(120 * Math.sqrt((innerWidth*innerHeight)/(1280*720)));
+    const n = Math.floor(60 * Math.sqrt((innerWidth*innerHeight)/(1280*720)));
     for (let i=0;i<n;i++){
       const z = rand(1.0, 0.2);
       bgBokeh.push({
@@ -1391,7 +1391,7 @@
       const y = topY + u * height;
       const half = lerp(0.04, 0.28, u);
 
-      const count = Math.floor(90 + 150*u);
+      const count = Math.floor(50 + 80*u); // Reduced for performance
       for (let i=0; i<count; i++){
         const v = Math.random();
         const x = cx + (rand(1,-1) * half * (0.15 + 0.85*Math.pow(v, 0.55)));
@@ -1417,11 +1417,11 @@
       }
     }
 
-    // Garlands
+    // Garlands - reduced for performance
     const garlands = 2;
     for (let g=0; g<garlands; g++){
       const turns = 4.2 + g*0.6;
-      for (let i=0; i<220; i++){
+      for (let i=0; i<120; i++){
         const u = i/219;
         const y = topY + u * height;
         const half = lerp(0.02, 0.27, u);
@@ -1551,58 +1551,35 @@
       }
     }
 
+    // Simplified bloom - single blur pass for better performance
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
-    ctx.filter = `blur(${Math.max(6, 10*dpr)}px)`;
-    ctx.drawImage(glow, 0, 0);
-    ctx.filter = `blur(${Math.max(2, 4*dpr)}px)`;
-    ctx.globalAlpha = 0.85;
+    ctx.filter = `blur(${Math.max(4, 6*dpr)}px)`;
     ctx.drawImage(glow, 0, 0);
     ctx.filter = 'none';
+    ctx.globalAlpha = 0.9;
+    ctx.drawImage(glow, 0, 0);
     ctx.globalAlpha = 1;
     ctx.restore();
   }
 
 
 
-  function filmGrain() {
-    const w = Math.min(320, W), h = Math.min(180, H);
-    const img = ctx.getImageData(0,0,w,h);
-    const d = img.data;
-    const strength = 10;
-    for (let i=0;i<d.length;i+=4){
-      const g = (Math.random()*2-1) * strength;
-      d[i]   = clamp(d[i]   + g, 0, 255);
-      d[i+1] = clamp(d[i+1] + g, 0, 255);
-      d[i+2] = clamp(d[i+2] + g, 0, 255);
-    }
-    const tmp = document.createElement('canvas');
-    tmp.width = w; tmp.height = h;
-    tmp.getContext('2d').putImageData(img,0,0);
-
-    ctx.save();
-    ctx.globalAlpha = 0.08;
-    ctx.imageSmoothingEnabled = true;
-    ctx.drawImage(tmp, 0, 0, W, H);
-    ctx.restore();
-  }
+  // Simplified tick - removed expensive filmGrain and reduced blur operations
+  let frameCount = 0;
 
   function tick(now) {
+    frameCount++;
     const time = now - t0;
 
     vignette();
-    drawBackgroundBokeh(now);
 
-    ctx.save();
-    ctx.globalAlpha = 0.22;
-    ctx.filter = `blur(${Math.max(8, 14*dpr)}px)`;
-    ctx.drawImage(canvas, 0, 0);
-    ctx.filter = 'none';
-    ctx.globalAlpha = 1;
-    ctx.restore();
+    // Only update bokeh every 2nd frame for performance
+    if (frameCount % 2 === 0) {
+      drawBackgroundBokeh(now);
+    }
 
     drawTree(now);
-    filmGrain();
 
     requestAnimationFrame(tick);
   }
