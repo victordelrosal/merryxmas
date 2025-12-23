@@ -412,21 +412,84 @@
     .from-wrapper.metallic-gold .from-name,
     .from-wrapper.metallic-gold .from-prefix {
       background: linear-gradient(180deg,
-        #bf953f 0%, #fcf6ba 25%, #aa771c 50%, #fcf6ba 75%, #bf953f 100%);
+        #462523 0%,
+        #cb9b51 12%,
+        #f6e27a 25%,
+        #f6f2c0 40%,
+        #f6e27a 50%,
+        #cb9b51 60%,
+        #f6e27a 75%,
+        #cb9b51 88%,
+        #462523 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      filter:
+        drop-shadow(0 1px 0 rgba(255,255,255,0.4))
+        drop-shadow(0 2px 2px rgba(0,0,0,0.4))
+        drop-shadow(0 4px 6px rgba(0,0,0,0.3));
     }
     .from-wrapper.bimetallic,
     .from-wrapper.bimetallic .from-name,
     .from-wrapper.bimetallic .from-prefix {
       background: linear-gradient(180deg,
-        #c0c0c0 0%, #f5f5f5 15%, #d4af37 30%, #ffd700 50%, #d4af37 70%, #f5f5f5 85%, #c0c0c0 100%);
+        #1a1a1a 0%,
+        #8e8e8e 8%,
+        #e8e8e8 18%,
+        #ffffff 25%,
+        #d4af37 35%,
+        #ffd700 45%,
+        #fffacd 50%,
+        #ffd700 55%,
+        #d4af37 65%,
+        #ffffff 75%,
+        #e8e8e8 82%,
+        #8e8e8e 92%,
+        #1a1a1a 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      filter:
+        drop-shadow(0 1px 0 rgba(255,255,255,0.5))
+        drop-shadow(0 2px 2px rgba(0,0,0,0.4))
+        drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    }
+    /* Gold Stripes - Repeating angled gradient */
+    .from-wrapper.gold-stripes,
+    .from-wrapper.gold-stripes .from-name,
+    .from-wrapper.gold-stripes .from-prefix {
+      background: repeating-linear-gradient(5deg,
+        #ffb338 0%,
+        #77571d 23%,
+        #ffb338 31%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter:
+        drop-shadow(5px 15px 15px rgba(0,0,0,0.8))
+        drop-shadow(0 1px 0 rgba(255,200,100,0.3));
+    }
+    /* Chrome/Silver option */
+    .from-wrapper.chrome,
+    .from-wrapper.chrome .from-name,
+    .from-wrapper.chrome .from-prefix {
+      background: linear-gradient(180deg,
+        #1a1a2e 0%,
+        #6a6a7a 10%,
+        #9a9aaa 20%,
+        #dadaea 35%,
+        #ffffff 50%,
+        #dadaea 65%,
+        #9a9aaa 80%,
+        #6a6a7a 90%,
+        #1a1a2e 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter:
+        drop-shadow(0 1px 0 rgba(255,255,255,0.6))
+        drop-shadow(0 2px 2px rgba(0,0,0,0.4))
+        drop-shadow(0 4px 6px rgba(0,0,0,0.3));
     }
     /* Musicbar Footer - Minimalist YouTube style */
     .musicbar {
@@ -1848,13 +1911,15 @@
   const textures = [
     { class: '', label: 'Regular' },
     { class: 'metallic-gold', label: 'Gold' },
-    { class: 'bimetallic', label: 'Bimetallic' }
+    { class: 'gold-stripes', label: 'Gold Stripes' },
+    { class: 'bimetallic', label: 'Bimetallic' },
+    { class: 'chrome', label: 'Chrome' }
   ];
   let textureIndex = 0;
 
   function cycleTexture() {
     // Remove current texture class
-    fromWrapper.classList.remove('metallic-gold', 'bimetallic');
+    fromWrapper.classList.remove('metallic-gold', 'gold-stripes', 'bimetallic', 'chrome');
 
     textureIndex = (textureIndex + 1) % textures.length;
     const { class: cls, label } = textures[textureIndex];
