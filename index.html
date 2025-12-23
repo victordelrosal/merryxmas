@@ -7,20 +7,20 @@
   <meta name="description" content="Interactive Christmas card with animated tree, twinkling lights, and holiday music">
 
   <!-- Favicon & Apple Touch Icon -->
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" href="favicon.png">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+  <link rel="apple-touch-icon" href="img/Merry Xmas.png">
 
   <!-- Open Graph / Social Media Preview -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Merry Christmas">
   <meta property="og:description" content="Interactive Christmas card with animated tree, twinkling lights, and holiday music">
-  <meta property="og:image" content="favicon.png">
+  <meta property="og:image" content="img/Merry Xmas.png">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Merry Christmas">
   <meta name="twitter:description" content="Interactive Christmas card with animated tree, twinkling lights, and holiday music">
-  <meta name="twitter:image" content="favicon.png">
+  <meta name="twitter:image" content="img/Merry Xmas.png">
 
   <!-- Web App -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -906,7 +906,7 @@
       opacity: 0 !important;
       pointer-events: none !important;
     }
-    /* Random dice button - icy glass cube (50% transparent) */
+    /* Random dice button - icy glass cube */
     .random-btn {
       position: fixed;
       top: 16px;
@@ -917,40 +917,37 @@
       align-items: center;
       justify-content: center;
       background: linear-gradient(145deg,
-        rgba(180,220,255,0.10) 0%,
-        rgba(150,200,255,0.04) 50%,
-        rgba(200,230,255,0.06) 100%);
+        rgba(180,220,255,0.20) 0%,
+        rgba(150,200,255,0.08) 50%,
+        rgba(200,230,255,0.12) 100%);
       backdrop-filter: blur(12px) saturate(1.4);
       -webkit-backdrop-filter: blur(12px) saturate(1.4);
-      border: 1px solid rgba(200,230,255,0.12);
+      border: 1px solid rgba(200,230,255,0.25);
       border-radius: 10px;
       cursor: pointer;
       z-index: 95;
       transition: all 0.25s ease;
-      opacity: 0.5;
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.15),
-        inset 0 -1px 0 rgba(100,150,200,0.05),
-        0 4px 16px rgba(100,150,200,0.08),
-        0 0 1px rgba(255,255,255,0.2);
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        inset 0 -1px 0 rgba(100,150,200,0.1),
+        0 4px 16px rgba(100,150,200,0.15),
+        0 0 1px rgba(255,255,255,0.4);
     }
     .random-btn svg {
-      filter: drop-shadow(0 1px 2px rgba(100,180,220,0.2));
-      opacity: 0.7;
+      filter: drop-shadow(0 1px 2px rgba(100,180,220,0.3));
     }
     .random-btn:hover {
-      opacity: 0.85;
       background: linear-gradient(145deg,
-        rgba(180,220,255,0.15) 0%,
-        rgba(160,210,255,0.08) 50%,
-        rgba(210,235,255,0.10) 100%);
-      border-color: rgba(200,230,255,0.2);
+        rgba(180,220,255,0.30) 0%,
+        rgba(160,210,255,0.15) 50%,
+        rgba(210,235,255,0.20) 100%);
+      border-color: rgba(200,230,255,0.4);
       transform: scale(1.1);
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.2),
-        inset 0 -1px 0 rgba(100,150,200,0.08),
-        0 6px 24px rgba(100,150,200,0.12),
-        0 0 20px rgba(150,200,255,0.06);
+        inset 0 1px 0 rgba(255,255,255,0.4),
+        inset 0 -1px 0 rgba(100,150,200,0.15),
+        0 6px 24px rgba(100,150,200,0.25),
+        0 0 20px rgba(150,200,255,0.12);
     }
     .random-btn.shake {
       animation: diceShake 0.5s ease-out;
@@ -966,51 +963,6 @@
     }
     :fullscreen .random-btn,
     :-webkit-full-screen .random-btn {
-      opacity: 0 !important;
-      pointer-events: none !important;
-    }
-    /* Visitor flags container */
-    .visitor-flags {
-      position: fixed;
-      top: 16px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: center;
-      max-width: 70%;
-      z-index: 80;
-      padding: 8px 16px;
-      background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 20px;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-    .visitor-flags.visible {
-      opacity: 1;
-    }
-    .visitor-flags:empty {
-      display: none;
-    }
-    .visitor-flag {
-      font-size: 20px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-      animation: flagPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-      opacity: 0;
-      transform: scale(0);
-    }
-    @keyframes flagPop {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-    :fullscreen .visitor-flags,
-    :-webkit-full-screen .visitor-flags {
       opacity: 0 !important;
       pointer-events: none !important;
     }
@@ -1182,32 +1134,32 @@
   <div class="musicbar-tracklist" id="tracklistDropdown">
     <div class="musicbar-tracklist-item" data-track="0">
       <span class="musicbar-tracklist-num">1</span>
-      <span class="musicbar-tracklist-name">Silent Night</span>
+      <span class="musicbar-tracklist-name">Carol of the Bells</span>
       <svg class="musicbar-tracklist-playing-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
     </div>
     <div class="musicbar-tracklist-item" data-track="1">
       <span class="musicbar-tracklist-num">2</span>
-      <span class="musicbar-tracklist-name">O Holy Night</span>
+      <span class="musicbar-tracklist-name">Silent Night</span>
       <svg class="musicbar-tracklist-playing-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
     </div>
     <div class="musicbar-tracklist-item" data-track="2">
       <span class="musicbar-tracklist-num">3</span>
-      <span class="musicbar-tracklist-name">Jingle Bells</span>
+      <span class="musicbar-tracklist-name">O Holy Night</span>
       <svg class="musicbar-tracklist-playing-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
     </div>
     <div class="musicbar-tracklist-item" data-track="3">
       <span class="musicbar-tracklist-num">4</span>
-      <span class="musicbar-tracklist-name">Winter Wonderland</span>
+      <span class="musicbar-tracklist-name">Jingle Bells</span>
       <svg class="musicbar-tracklist-playing-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
     </div>
     <div class="musicbar-tracklist-item" data-track="4">
       <span class="musicbar-tracklist-num">5</span>
-      <span class="musicbar-tracklist-name">Christmas Medley</span>
+      <span class="musicbar-tracklist-name">Winter Wonderland</span>
       <svg class="musicbar-tracklist-playing-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
     </div>
     <div class="musicbar-tracklist-item" data-track="5">
       <span class="musicbar-tracklist-num">6</span>
-      <span class="musicbar-tracklist-name">White Christmas</span>
+      <span class="musicbar-tracklist-name">Christmas Medley</span>
       <svg class="musicbar-tracklist-playing-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
     </div>
   </div>
@@ -1258,9 +1210,6 @@
 
 <!-- Font Size Indicator -->
 <div class="font-size-indicator" id="fontSizeIndicator">100%</div>
-
-<!-- Visitor flags from around the world -->
-<div class="visitor-flags" id="visitorFlags"></div>
 
 <div class="hint">Press [?] for keyboard shortcuts</div>
 <div class="views-counter"><span id="viewCount"></span> views</div>
@@ -1554,35 +1503,58 @@
       }
     }
 
-    // Simplified bloom - single blur pass for better performance
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
-    ctx.filter = `blur(${Math.max(4, 6*dpr)}px)`;
+    ctx.filter = `blur(${Math.max(6, 10*dpr)}px)`;
+    ctx.drawImage(glow, 0, 0);
+    ctx.filter = `blur(${Math.max(2, 4*dpr)}px)`;
+    ctx.globalAlpha = 0.85;
     ctx.drawImage(glow, 0, 0);
     ctx.filter = 'none';
-    ctx.globalAlpha = 0.9;
-    ctx.drawImage(glow, 0, 0);
     ctx.globalAlpha = 1;
     ctx.restore();
   }
 
 
 
-  // Simplified tick - removed expensive filmGrain and reduced blur operations
-  let frameCount = 0;
+  function filmGrain() {
+    const w = Math.min(320, W), h = Math.min(180, H);
+    const img = ctx.getImageData(0,0,w,h);
+    const d = img.data;
+    const strength = 10;
+    for (let i=0;i<d.length;i+=4){
+      const g = (Math.random()*2-1) * strength;
+      d[i]   = clamp(d[i]   + g, 0, 255);
+      d[i+1] = clamp(d[i+1] + g, 0, 255);
+      d[i+2] = clamp(d[i+2] + g, 0, 255);
+    }
+    const tmp = document.createElement('canvas');
+    tmp.width = w; tmp.height = h;
+    tmp.getContext('2d').putImageData(img,0,0);
+
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(tmp, 0, 0, W, H);
+    ctx.restore();
+  }
 
   function tick(now) {
-    frameCount++;
     const time = now - t0;
 
     vignette();
+    drawBackgroundBokeh(now);
 
-    // Only update bokeh every 2nd frame for performance
-    if (frameCount % 2 === 0) {
-      drawBackgroundBokeh(now);
-    }
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.filter = `blur(${Math.max(8, 14*dpr)}px)`;
+    ctx.drawImage(canvas, 0, 0);
+    ctx.filter = 'none';
+    ctx.globalAlpha = 1;
+    ctx.restore();
 
     drawTree(now);
+    filmGrain();
 
     requestAnimationFrame(tick);
   }
@@ -1600,13 +1572,19 @@
 
   sidebarToggle.addEventListener('click', toggleSidebar);
 
-  // Clicking icons toggles the control (works in both collapsed and expanded modes)
+  // Clicking icons in collapsed mode: trigger the button action AND expand
   document.querySelectorAll('.control-icon').forEach(icon => {
     icon.addEventListener('click', (e) => {
-      const controlGroup = icon.closest('.control-group');
-      const btn = controlGroup?.querySelector('.control-btn');
-      if (btn) {
-        btn.click();
+      if (!sidebar.classList.contains('expanded')) {
+        // Find the associated button in this control group and click it
+        const controlGroup = icon.closest('.control-group');
+        const btn = controlGroup?.querySelector('.control-btn');
+        if (btn) {
+          btn.click();
+        }
+        // Also expand the sidebar and sync musicbar
+        sidebar.classList.add('expanded');
+        musicbarEl.classList.add('sidebar-open');
       }
     });
   });
@@ -2037,21 +2015,21 @@
 
   // ========== MUSIC PLAYER ==========
   const defaultTracks = [
-    'ns1gReXtNag',  // Track 1 - Silent Night (was Carol of Bells but blocked embeds)
-    'XQvzdKy1YQQ',  // Track 2
-    'nCIO60uatRY',  // Track 3
-    '6SlwnNKsidw',  // Track 4
-    'PZtrgRejwG0',  // Track 5
-    'aAkMkVFwAoo'   // Track 6
+    'u-llX00huRE',  // Track 1
+    'ns1gReXtNag',  // Track 2
+    'XQvzdKy1YQQ',  // Track 3
+    'nCIO60uatRY',  // Track 4
+    '6SlwnNKsidw',  // Track 5
+    'PZtrgRejwG0'   // Track 6
   ];
 
   const trackNames = [
+    'Carol of the Bells',
     'Silent Night',
     'O Holy Night',
     'Jingle Bells',
     'Winter Wonderland',
-    'Christmas Medley',
-    'White Christmas'
+    'Christmas Medley'
   ];
 
   let musicTracks = [...defaultTracks];
@@ -2446,96 +2424,6 @@
     .catch(() => {
       document.querySelector('.views-counter').style.display = 'none';
     });
-
-  // ========== VISITOR FLAGS ==========
-  // Firebase config - REPLACE with your own Firebase project config
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  // Country code to flag emoji converter
-  function countryToFlag(countryCode) {
-    if (!countryCode || countryCode.length !== 2) return '';
-    const codePoints = countryCode
-      .toUpperCase()
-      .split('')
-      .map(char => 127397 + char.charCodeAt(0));
-    return String.fromCodePoint(...codePoints);
-  }
-
-  // Initialize visitor flags system
-  async function initVisitorFlags() {
-    const flagsContainer = document.getElementById('visitorFlags');
-
-    // Check if Firebase config is set up
-    if (firebaseConfig.apiKey === "YOUR_API_KEY") {
-      console.log('Visitor flags: Firebase not configured. See instructions in code.');
-      return;
-    }
-
-    try {
-      // Dynamically load Firebase
-      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
-      const { getDatabase, ref, set, onValue } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
-
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const db = getDatabase(app);
-      const countriesRef = ref(db, 'visitor-countries');
-
-      // Get visitor's country from IP
-      const geoResponse = await fetch('https://ipapi.co/json/');
-      const geoData = await geoResponse.json();
-      const countryCode = geoData.country_code;
-
-      if (countryCode) {
-        // Add this country to Firebase (uses country code as key, so duplicates are automatic)
-        const countryRef = ref(db, `visitor-countries/${countryCode}`);
-        await set(countryRef, {
-          code: countryCode,
-          name: geoData.country_name,
-          addedAt: Date.now()
-        });
-      }
-
-      // Listen for all countries in real-time
-      onValue(countriesRef, (snapshot) => {
-        const countries = snapshot.val();
-        if (!countries) return;
-
-        // Clear and rebuild flags
-        flagsContainer.innerHTML = '';
-
-        // Sort by when they were added
-        const sortedCountries = Object.values(countries)
-          .sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
-
-        sortedCountries.forEach((country, index) => {
-          const flag = document.createElement('span');
-          flag.className = 'visitor-flag';
-          flag.textContent = countryToFlag(country.code);
-          flag.title = country.name;
-          flag.style.animationDelay = `${index * 0.05}s`;
-          flagsContainer.appendChild(flag);
-        });
-
-        // Show container
-        flagsContainer.classList.add('visible');
-      });
-
-    } catch (error) {
-      console.log('Visitor flags error:', error.message);
-    }
-  }
-
-  // Initialize visitor flags
-  initVisitorFlags();
 
 })();
 </script>
