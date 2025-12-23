@@ -1,0 +1,1743 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Merry Christmas</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    html, body { height: 100%; margin: 0; background: #06050a; overflow: hidden; }
+    canvas { display: block; width: 100vw; height: 100vh; }
+    .hint {
+      position: fixed; left: 18px; bottom: 14px;
+      font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: rgba(255,255,255,0.55);
+      user-select: none; pointer-events: none;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.7);
+    }
+    .snow-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      perspective: 1000px;
+      overflow: hidden;
+    }
+    .snowflake {
+      position: absolute;
+      user-select: none;
+      animation: fall linear infinite;
+      will-change: transform;
+    }
+    .snowflake span {
+      display: block;
+      color: #d0e8ff;
+      animation: spin3d linear infinite;
+    }
+    @keyframes fall {
+      0% { transform: translateY(-5vh) translateX(0); }
+      100% { transform: translateY(105vh) translateX(20vw); }
+    }
+    @keyframes spin3d {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
+    }
+    /* Glassmorphic Sidebar - Ultra Silk Smooth */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 220px;
+      background: linear-gradient(165deg,
+        rgba(255,255,255,0.12) 0%,
+        rgba(255,255,255,0.05) 40%,
+        rgba(255,255,255,0.02) 100%);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-right: 1px solid rgba(255,255,255,0.15);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.05),
+        inset 1px 1px 0 rgba(255,255,255,0.1),
+        0 0 20px rgba(0,0,0,0);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      font: 11px/1.4 system-ui, -apple-system, sans-serif;
+      color: rgba(255,255,255,0.85);
+      overflow: hidden;
+      overflow-y: auto;
+      transform: translateX(-168px);
+      transition: transform 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+      will-change: transform;
+      contain: layout style;
+    }
+    .sidebar.expanded {
+      transform: translateX(0);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.05),
+        inset 1px 1px 0 rgba(255,255,255,0.1),
+        0 8px 32px rgba(0,0,0,0.4),
+        0 0 80px rgba(0,0,0,0.2);
+    }
+    .sidebar::-webkit-scrollbar { width: 4px; }
+    .sidebar::-webkit-scrollbar-track { background: transparent; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
+    .sidebar-toggle {
+      width: 100%;
+      padding: 12px 8px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      color: rgba(255,255,255,0.7);
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    .sidebar.expanded .sidebar-toggle {
+      flex-direction: row;
+      justify-content: flex-start;
+      padding-left: 14px;
+    }
+    .sidebar-toggle:hover {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.95);
+    }
+    .sidebar-toggle .chevron-icon {
+      flex-shrink: 0;
+      transition: transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+                  opacity 0.25s ease;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 4px rgba(255,255,255,0.3));
+    }
+    .sidebar-toggle:hover .chevron-icon {
+      opacity: 1;
+      filter: drop-shadow(0 0 8px rgba(255,255,255,0.5));
+    }
+    .sidebar.expanded .sidebar-toggle .chevron-icon {
+      transform: rotate(180deg);
+      opacity: 0.6;
+      filter: none;
+    }
+    .sidebar.expanded .sidebar-toggle:hover .chevron-icon {
+      opacity: 0.9;
+    }
+    .sidebar-toggle span {
+      opacity: 0;
+      white-space: nowrap;
+      transition: opacity 0.25s ease;
+      flex: 1;
+    }
+    .sidebar.expanded .sidebar-toggle span {
+      opacity: 1;
+    }
+
+    .sidebar-section {
+      padding: 4px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .control-group {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      padding: 4px 8px;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    .sidebar.expanded .control-group {
+      flex-direction: row;
+      justify-content: flex-start;
+    }
+    .control-group:hover { background: rgba(255,255,255,0.06); }
+    .control-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(145deg, rgba(255,255,255,0.15), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      flex-shrink: 0;
+      cursor: pointer;
+      box-shadow:
+        0 2px 8px rgba(0,0,0,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 -1px 0 rgba(0,0,0,0.1);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: all 0.25s ease;
+    }
+    .control-icon:hover,
+    .control-group:hover .control-icon {
+      transform: scale(1.05);
+      box-shadow:
+        0 4px 16px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        0 0 20px rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.25);
+      background: linear-gradient(145deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+    }
+    .control-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: rgba(255,255,255,0.75);
+      fill: none;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: stroke 0.3s ease;
+    }
+    .control-group:hover .control-icon svg {
+      stroke: rgba(255,255,255,0.95);
+    }
+    .control-content {
+      flex: 1;
+      min-width: 0;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      transition-delay: 0.15s;
+    }
+    .sidebar.expanded .control-content {
+      opacity: 1;
+      transition-delay: 0.2s;
+    }
+    .control-label {
+      font-size: 10px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .control-row input[type="range"] {
+      flex: 1;
+      height: 4px;
+      -webkit-appearance: none;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      outline: none;
+    }
+    .control-row input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px;
+      height: 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(200,220,255,0.7));
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .control-value {
+      font-size: 11px;
+      color: rgba(255,255,255,0.6);
+      min-width: 28px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .control-btn {
+      width: 100%;
+      padding: 7px 10px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.85);
+      font-size: 11px;
+      cursor: pointer;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.1),
+        0 2px 4px rgba(0,0,0,0.15);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      transition: all 0.2s ease;
+    }
+    .control-btn:hover {
+      background: linear-gradient(145deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+      border-color: rgba(255,255,255,0.2);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        0 4px 12px rgba(0,0,0,0.2);
+      transform: translateY(-1px);
+    }
+    .control-btn:active {
+      transform: translateY(0) scale(0.97);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .control-btn.active {
+      background: linear-gradient(145deg, rgba(150,210,255,0.25), rgba(120,180,255,0.1));
+      border-color: rgba(150,210,255,0.4);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        0 0 20px rgba(150,210,255,0.2),
+        0 4px 12px rgba(0,0,0,0.15);
+      color: rgba(255,255,255,0.95);
+    }
+    /* Image Mask Overlay */
+    .image-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .image-overlay.visible {
+      opacity: 1;
+    }
+    .image-overlay img {
+      max-width: 85%;
+      max-height: 85%;
+      object-fit: contain;
+    }
+    /* From signature */
+    .from-container {
+      position: fixed;
+      bottom: 6%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 60;
+      text-align: center;
+      pointer-events: auto;
+      width: 56%;
+      max-width: 800px;
+      min-width: 280px;
+    }
+    .from-wrapper {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(30px, 5vw, 48px);
+      color: rgba(255,235,210,0.75);
+      text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.2em;
+      line-height: 1.3;
+    }
+    .from-name {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(36px, 6vw, 60px);
+      color: rgba(255,255,255,0.95);
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255,255,255,0.3);
+      outline: none;
+      text-align: center;
+      min-width: 120px;
+      max-width: 100%;
+      padding: 4px 12px;
+      text-shadow: 0 2px 15px rgba(0,0,0,0.6), 0 0 30px rgba(255,200,100,0.3);
+      transition: border-color 0.3s ease, text-shadow 0.3s ease;
+      caret-color: rgba(255,220,150,0.8);
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      display: inline-block;
+    }
+    .from-name:empty::before {
+      content: 'Your name';
+      color: rgba(255,255,255,0.35);
+      font-style: italic;
+    }
+    .from-name:focus {
+      border-bottom-color: rgba(255,220,150,0.6);
+      text-shadow: 0 2px 15px rgba(0,0,0,0.6), 0 0 40px rgba(255,200,100,0.5);
+    }
+    .from-name:not(:empty) {
+      border-bottom-color: transparent;
+    }
+    .from-prefix {
+      cursor: text;
+      transition: opacity 0.3s ease;
+    }
+    .from-prefix:empty {
+      display: none;
+    }
+    /* Music controls */
+    .music-player {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .music-track {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      transition: all 0.25s ease;
+    }
+    .music-track:hover {
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+      border-color: rgba(255,255,255,0.15);
+    }
+    .music-track.playing {
+      background: linear-gradient(135deg, rgba(100,200,150,0.15), rgba(80,180,130,0.05));
+      border-color: rgba(100,200,150,0.3);
+      box-shadow: 0 0 20px rgba(100,200,150,0.15), inset 0 0 20px rgba(100,200,150,0.05);
+    }
+    .music-track-name {
+      flex: 1;
+      font-size: 10px;
+      color: rgba(255,255,255,0.7);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .music-track.playing .music-track-name {
+      color: rgba(200,255,220,0.95);
+    }
+    .music-track-btns {
+      display: flex;
+      gap: 3px;
+    }
+    .music-ctrl-btn {
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      padding: 0;
+    }
+    .music-ctrl-btn:hover {
+      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));
+      border-color: rgba(255,255,255,0.25);
+      transform: scale(1.08);
+    }
+    .music-ctrl-btn:active {
+      transform: scale(0.95);
+    }
+    .music-ctrl-btn svg {
+      width: 12px;
+      height: 12px;
+      fill: rgba(255,255,255,0.8);
+    }
+    .music-ctrl-btn.play-btn svg { fill: rgba(150,255,180,0.9); }
+    .music-ctrl-btn.stop-btn svg { fill: rgba(255,150,150,0.9); }
+    .music-global-controls {
+      display: flex;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .music-global-btn {
+      flex: 1;
+      padding: 5px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      color: rgba(255,255,255,0.7);
+      font-size: 9px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .music-global-btn:hover {
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.95);
+    }
+    /* Music Modal */
+    .music-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .music-modal.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .music-modal-content {
+      background: linear-gradient(165deg,
+        rgba(40,40,55,0.92) 0%,
+        rgba(25,25,35,0.95) 100%);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 28px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow:
+        0 25px 80px rgba(0,0,0,0.6),
+        0 0 1px rgba(255,255,255,0.1),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+    }
+    .music-modal-content h3 {
+      margin: 0 0 8px 0;
+      color: rgba(255,255,255,0.9);
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .music-modal-content p {
+      margin: 0 0 16px 0;
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+    }
+    .music-url-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .music-url-inputs label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      color: rgba(255,255,255,0.6);
+      font-size: 11px;
+    }
+    .music-url-inputs input {
+      padding: 8px 10px;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 6px;
+      color: rgba(255,255,255,0.9);
+      font-size: 11px;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+    .music-url-inputs input:focus {
+      border-color: rgba(180,220,255,0.5);
+    }
+    .music-modal-btns {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    /* Views counter */
+    .views-counter {
+      position: fixed;
+      bottom: 12px;
+      right: 16px;
+      font: 11px/1.4 system-ui, -apple-system, sans-serif;
+      color: rgba(255,255,255,0.4);
+      z-index: 5;
+      user-select: none;
+      pointer-events: none;
+    }
+    /* Fullscreen: pure art mode */
+    :fullscreen .sidebar,
+    :fullscreen .hint,
+    :fullscreen .views-counter {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: opacity 0.4s ease;
+    }
+    :-webkit-full-screen .sidebar,
+    :-webkit-full-screen .hint,
+    :-webkit-full-screen .views-counter {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: opacity 0.4s ease;
+    }
+    /* Hotkey Help Overlay */
+    .hotkey-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .hotkey-overlay.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .hotkey-content {
+      text-align: center;
+      transform: scale(0.95) translateY(10px);
+      transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .hotkey-overlay.visible .hotkey-content {
+      transform: scale(1) translateY(0);
+    }
+    .hotkey-title {
+      font-size: 14px;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 30px;
+    }
+    .hotkey-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px 40px;
+      max-width: 500px;
+    }
+    .hotkey-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+    }
+    .hotkey-key {
+      min-width: 44px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.9);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+      padding: 0 10px;
+    }
+    .hotkey-desc {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      text-align: left;
+    }
+    .hotkey-dismiss {
+      margin-top: 30px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+    }
+    /* Font size indicator */
+    .font-size-indicator {
+      position: fixed;
+      bottom: 50%;
+      right: 20px;
+      transform: translateY(50%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 8px 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 150;
+    }
+    .font-size-indicator.visible {
+      opacity: 1;
+      transform: translateY(50%) scale(1);
+    }
+    .font-size-indicator.hiding {
+      opacity: 0;
+      transform: translateY(50%) scale(0.9);
+    }
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="snow-container" id="snow"></div>
+<div class="image-overlay visible" id="imageOverlay">
+  <img src="img/MerryChristmasMetallic.png" alt="Merry Christmas">
+</div>
+
+<div class="from-container">
+  <div class="from-wrapper">
+    <span class="from-prefix" id="fromPrefix" contenteditable="true" spellcheck="false">From:</span>
+    <span class="from-name" id="fromInput" contenteditable="true" spellcheck="false"></span>
+  </div>
+</div>
+
+<aside class="sidebar" id="sidebar">
+  <button class="sidebar-toggle" id="sidebarToggle">
+    <svg class="chevron-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+    <span>Controls</span>
+  </button>
+
+  <div class="sidebar-section">
+    <!-- Snow Density -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/></svg>
+      </div>
+      <div class="control-content">
+        <div class="control-label">Snow Density</div>
+        <div class="control-row">
+          <input type="range" id="snowDensity" min="20" max="200" value="20">
+          <span class="control-value" id="densityVal">20</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Snow Speed -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      </div>
+      <div class="control-content">
+        <div class="control-label">Fall Speed</div>
+        <div class="control-row">
+          <input type="range" id="snowSpeed" min="2" max="15" value="2" step="0.5">
+          <span class="control-value" id="speedVal">2s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sparkle -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 3l1.5 5.5L19 10l-5.5 1.5L12 17l-1.5-5.5L5 10l5.5-1.5L12 3zM5 19l1 3 1-3 3-1-3-1-1-3-1 3-3 1 3 1z"/></svg>
+      </div>
+      <div class="control-content">
+        <div class="control-label">Tree Sparkle</div>
+        <div class="control-row">
+          <input type="range" id="sparkleCtrl" min="0.2" max="3" value="3" step="0.1">
+          <span class="control-value" id="sparkleVal">3.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <!-- Toggle Snow -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn active" id="toggleSnow">Snow On</button>
+      </div>
+    </div>
+
+    <!-- Image Overlay -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn active" id="toggleImage">Image On</button>
+      </div>
+    </div>
+
+    <!-- Fullscreen -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 00-2 2v3M21 8V5a2 2 0 00-2-2h-3M3 16v3a2 2 0 002 2h3M16 21h3a2 2 0 002-2v-3"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn" id="toggleFullscreen">Fullscreen</button>
+      </div>
+    </div>
+
+    <!-- Font Size -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn" id="fontSizeBtn">Text Size: 100%</button>
+      </div>
+    </div>
+
+    <!-- Restore Text -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 109-9 9.75 9.75 0 00-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn" id="restoreSignature">Restore Text</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music Section -->
+  <div class="sidebar-section">
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+      </div>
+      <div class="control-content">
+        <div class="control-label">Music</div>
+        <div class="music-player">
+          <div class="music-track" data-track="0">
+            <span class="music-track-name">Track 1</span>
+            <div class="music-track-btns">
+              <button class="music-ctrl-btn play-btn" data-action="play" title="Play">
+                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+              </button>
+              <button class="music-ctrl-btn stop-btn" data-action="stop" title="Stop">
+                <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="music-track" data-track="1">
+            <span class="music-track-name">Track 2</span>
+            <div class="music-track-btns">
+              <button class="music-ctrl-btn play-btn" data-action="play" title="Play">
+                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+              </button>
+              <button class="music-ctrl-btn stop-btn" data-action="stop" title="Stop">
+                <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="music-track" data-track="2">
+            <span class="music-track-name">Track 3</span>
+            <div class="music-track-btns">
+              <button class="music-ctrl-btn play-btn" data-action="play" title="Play">
+                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+              </button>
+              <button class="music-ctrl-btn stop-btn" data-action="stop" title="Stop">
+                <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="music-global-controls">
+          <button class="music-global-btn" id="stopAllMusic">Stop All</button>
+          <button class="music-global-btn" id="editMusicUrls">Edit URLs</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- Music URL Editor Modal -->
+<div class="music-modal" id="musicModal">
+  <div class="music-modal-content">
+    <h3>Customize Music URLs</h3>
+    <p>Paste YouTube video URLs:</p>
+    <div class="music-url-inputs">
+      <label>Track 1: <input type="text" id="musicUrl0" placeholder="YouTube URL"></label>
+      <label>Track 2: <input type="text" id="musicUrl1" placeholder="YouTube URL"></label>
+      <label>Track 3: <input type="text" id="musicUrl2" placeholder="YouTube URL"></label>
+    </div>
+    <div class="music-modal-btns">
+      <button class="control-btn" id="saveMusicUrls">Save</button>
+      <button class="control-btn" id="closeMusicModal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Hidden YouTube Players -->
+<div id="ytPlayers" style="position:fixed;bottom:0;right:0;width:200px;height:200px;overflow:hidden;opacity:0.001;pointer-events:none;z-index:-1;"></div>
+
+<!-- Hotkey Help Overlay -->
+<div class="hotkey-overlay" id="hotkeyOverlay">
+  <div class="hotkey-content">
+    <div class="hotkey-title">Keyboard Shortcuts</div>
+    <div class="hotkey-grid">
+      <div class="hotkey-item"><span class="hotkey-key">F</span><span class="hotkey-desc">Toggle fullscreen</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">S</span><span class="hotkey-desc">Toggle snow</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">C</span><span class="hotkey-desc">Toggle controls</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">M</span><span class="hotkey-desc">Toggle music</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">I</span><span class="hotkey-desc">Toggle image overlay</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">T</span><span class="hotkey-desc">Cycle font size</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">1 2 3</span><span class="hotkey-desc">Play music track</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">+ −</span><span class="hotkey-desc">Adjust sparkle</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">?</span><span class="hotkey-desc">Show this help</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">Esc</span><span class="hotkey-desc">Close / Exit</span></div>
+    </div>
+    <div class="hotkey-dismiss">Press any key to dismiss</div>
+  </div>
+</div>
+
+<!-- Font Size Indicator -->
+<div class="font-size-indicator" id="fontSizeIndicator">100%</div>
+
+<div class="hint">Press [?] for keyboard shortcuts</div>
+<div class="views-counter"><span id="viewCount"></span> views</div>
+
+<script>
+(() => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d', { alpha: false });
+
+  // Offscreen buffer for bloom
+  const glow = document.createElement('canvas');
+  const gtx = glow.getContext('2d', { alpha: true });
+
+  const cfg = {
+    sparkle: 3.0,
+    quality: 1.0,
+    warm: { r: 255, g: 210, b: 120 },
+    gold: { r: 255, g: 195, b: 90  },
+    amber:{ r: 255, g: 170, b: 70  }
+  };
+
+  let W = 0, H = 0, dpr = Math.min(2, window.devicePixelRatio || 1);
+  let t0 = performance.now();
+
+  const rand = (a=1, b=0) => Math.random() * (a - b) + b;
+  const clamp = (x,a,b)=>Math.max(a,Math.min(b,x));
+  const lerp = (a,b,u)=>a+(b-a)*u;
+
+  function resize() {
+    dpr = Math.min(2, window.devicePixelRatio || 1);
+    W = Math.floor(innerWidth  * dpr * cfg.quality);
+    H = Math.floor(innerHeight * dpr * cfg.quality);
+    canvas.width = W; canvas.height = H;
+    glow.width = W; glow.height = H;
+  }
+  window.addEventListener('resize', resize);
+
+  function mix(a,b,u){ return { r: lerp(a.r,b.r,u), g: lerp(a.g,b.g,u), b: lerp(a.b,b.b,u) }; }
+
+  // Background bokeh
+  const bgBokeh = [];
+  function initBg() {
+    bgBokeh.length = 0;
+    const n = Math.floor(120 * Math.sqrt((innerWidth*innerHeight)/(1280*720)));
+    for (let i=0;i<n;i++){
+      const z = rand(1.0, 0.2);
+      bgBokeh.push({
+        x: rand(innerWidth), y: rand(innerHeight),
+        r: rand(160, 40) * z,
+        a: rand(0.10, 0.02) * z,
+        hue: rand(1),
+        drift: rand(0.25, 0.05) * z,
+        phase: rand(Math.PI*2)
+      });
+    }
+  }
+
+  // Tree lights
+  const lights = [];
+  function initTree() {
+    lights.length = 0;
+
+    const baseY = 0.83;
+    const topY  = 0.20;
+    const cx    = 0.5;
+    const height = baseY - topY;
+
+    const layers = 10;
+    for (let L=0; L<layers; L++){
+      const u = L/(layers-1);
+      const y = topY + u * height;
+      const half = lerp(0.04, 0.28, u);
+
+      const count = Math.floor(90 + 150*u);
+      for (let i=0; i<count; i++){
+        const v = Math.random();
+        const x = cx + (rand(1,-1) * half * (0.15 + 0.85*Math.pow(v, 0.55)));
+        const yy = y + rand(height/layers*0.55, -height/layers*0.55);
+        const depth = rand(1.0, 0.25);
+
+        const accent = Math.random() < 0.06;
+        const colour = accent
+          ? mix({r:120,g:220,b:255}, {r:255,g:120,b:180}, rand(1))
+          : mix(cfg.gold, cfg.amber, rand(0.6,0.0)); // fixed
+
+        lights.push({
+          x, y: yy,
+          r: rand(0.0038, 0.0018) * depth,
+          a: rand(0.95, 0.35) * depth,
+          tw: rand(1.0, 0.35) * (accent ? 1.2 : 1.0),
+          w: rand(1.0, 0.2),
+          flicker: rand(5.5, 1.5),
+          phase: rand(Math.PI*2),
+          depth,
+          colour
+        });
+      }
+    }
+
+    // Garlands
+    const garlands = 2;
+    for (let g=0; g<garlands; g++){
+      const turns = 4.2 + g*0.6;
+      for (let i=0; i<220; i++){
+        const u = i/219;
+        const y = topY + u * height;
+        const half = lerp(0.02, 0.27, u);
+        const ang = u * Math.PI * 2 * turns + g*1.7;
+        const x = cx + Math.cos(ang) * half * 0.85;
+
+        lights.push({
+          x, y,
+          r: rand(0.0032, 0.0014) * rand(1.0,0.5),
+          a: rand(0.55, 0.18),
+          tw: rand(0.75, 0.25),
+          w: rand(1.0, 0.2),
+          flicker: rand(4.5, 1.0),
+          phase: rand(Math.PI*2),
+          depth: rand(1.0,0.4),
+          colour: mix(cfg.warm, cfg.gold, rand(1))
+        });
+      }
+    }
+
+    // Star
+    lights.push({
+      x: cx, y: topY - 0.03,
+      r: 0.010,
+      a: 1.0,
+      tw: 1.35,
+      w: 1.0,
+      flicker: 2.2,
+      phase: rand(Math.PI*2),
+      depth: 1.0,
+      colour: {r:255,g:245,b:210},
+      star: true
+    });
+  }
+
+
+  function drawRadial(x, y, r, col, a, soft=1.0) {
+    const px = x*W, py = y*H;
+    const rr = r*Math.min(W,H);
+    const grad = gtx.createRadialGradient(px, py, 0, px, py, rr);
+    grad.addColorStop(0.0, `rgba(${col.r|0},${col.g|0},${col.b|0},${a})`);
+    grad.addColorStop(0.3, `rgba(${col.r|0},${col.g|0},${col.b|0},${a*0.55})`);
+    grad.addColorStop(1.0, `rgba(${col.r|0},${col.g|0},${col.b|0},0)`);
+    gtx.fillStyle = grad;
+    gtx.beginPath();
+    gtx.arc(px, py, rr*soft, 0, Math.PI*2);
+    gtx.fill();
+  }
+
+  function vignette() {
+    const grd = ctx.createRadialGradient(W*0.5, H*0.55, Math.min(W,H)*0.10, W*0.5, H*0.55, Math.max(W,H)*0.75);
+    grd.addColorStop(0, '#0a0712');
+    grd.addColorStop(0.6, '#06050a');
+    grd.addColorStop(1, '#020106');
+    ctx.fillStyle = grd;
+    ctx.fillRect(0,0,W,H);
+
+    ctx.globalAlpha = 0.55;
+    const wash = ctx.createLinearGradient(0,0,W,H);
+    wash.addColorStop(0.0, 'rgba(40,25,70,0.55)');
+    wash.addColorStop(0.5, 'rgba(10,8,18,0.25)');
+    wash.addColorStop(1.0, 'rgba(90,40,10,0.35)');
+    ctx.fillStyle = wash;
+    ctx.fillRect(0,0,W,H);
+    ctx.globalAlpha = 1;
+  }
+
+  function drawBackgroundBokeh(time) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    for (const b of bgBokeh) {
+      const u = 0.5 + 0.5*Math.sin(time*0.0005*b.drift + b.phase);
+      const a = b.a * (0.75 + 0.55*u);
+      const col = mix({r:90,g:70,b:160}, {r:255,g:190,b:90}, b.hue);
+      const x = (b.x + Math.sin(time*0.0002 + b.phase)*20) / innerWidth;
+      const y = (b.y + Math.cos(time*0.00017 + b.phase)*16) / innerHeight;
+      const r = (b.r / Math.min(innerWidth, innerHeight));
+
+      const px = x*W, py = y*H;
+      const rr = r*Math.min(W,H);
+      const grad = ctx.createRadialGradient(px, py, 0, px, py, rr);
+      grad.addColorStop(0, `rgba(${col.r|0},${col.g|0},${col.b|0},${a})`);
+      grad.addColorStop(1, `rgba(${col.r|0},${col.g|0},${col.b|0},0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(px, py, rr, 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  function drawTree(time) {
+    gtx.clearRect(0,0,W,H);
+
+    const baseY = 0.84, topY = 0.19, cx = 0.5;
+    for (let i=0;i<8;i++){
+      const u = i/7;
+      const y = lerp(topY, baseY, u);
+      const half = lerp(0.03, 0.30, u);
+      drawRadial(cx, y, half*0.65, {r:40,g:85,b:60}, 0.10, 1.6);
+    }
+
+    const sparkle = cfg.sparkle;
+    for (const L of lights) {
+      const flick = 0.65 + 0.45*Math.sin(time*0.001*L.flicker + L.phase);
+      const pulse = (L.star ? 1.0 : 0.85) + 0.25*Math.sin(time*0.0016 + L.phase*1.7);
+      const a = clamp(L.a * (0.55 + 0.55*flick) * sparkle, 0, 1.2);
+      const r = L.r * (0.75 + 0.9*pulse) * (L.star ? 2.2 : 1.0);
+
+      drawRadial(L.x, L.y, r*0.55, L.colour, a*0.9, 1.0);
+      drawRadial(L.x, L.y, r*1.8, L.colour, a*0.55, 1.25);
+      drawRadial(L.x, L.y, r*3.8, L.colour, a*0.18, 1.6);
+
+      if (L.star) {
+        const px = L.x*W, py = L.y*H;
+        gtx.save();
+        gtx.globalCompositeOperation = 'screen';
+        gtx.translate(px, py);
+        gtx.rotate(time*0.00025);
+        gtx.globalAlpha = 0.35 * sparkle;
+        for (let k=0;k<8;k++){
+          gtx.rotate(Math.PI/4);
+          gtx.fillStyle = 'rgba(255,245,210,0.55)';
+          gtx.fillRect(0, -H*0.0012, Math.min(W,H)*0.08, H*0.0024);
+        }
+        gtx.restore();
+      }
+    }
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.filter = `blur(${Math.max(6, 10*dpr)}px)`;
+    ctx.drawImage(glow, 0, 0);
+    ctx.filter = `blur(${Math.max(2, 4*dpr)}px)`;
+    ctx.globalAlpha = 0.85;
+    ctx.drawImage(glow, 0, 0);
+    ctx.filter = 'none';
+    ctx.globalAlpha = 1;
+    ctx.restore();
+  }
+
+
+
+  function filmGrain() {
+    const w = Math.min(320, W), h = Math.min(180, H);
+    const img = ctx.getImageData(0,0,w,h);
+    const d = img.data;
+    const strength = 10;
+    for (let i=0;i<d.length;i+=4){
+      const g = (Math.random()*2-1) * strength;
+      d[i]   = clamp(d[i]   + g, 0, 255);
+      d[i+1] = clamp(d[i+1] + g, 0, 255);
+      d[i+2] = clamp(d[i+2] + g, 0, 255);
+    }
+    const tmp = document.createElement('canvas');
+    tmp.width = w; tmp.height = h;
+    tmp.getContext('2d').putImageData(img,0,0);
+
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(tmp, 0, 0, W, H);
+    ctx.restore();
+  }
+
+  function tick(now) {
+    const time = now - t0;
+
+    vignette();
+    drawBackgroundBokeh(now);
+
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.filter = `blur(${Math.max(8, 14*dpr)}px)`;
+    ctx.drawImage(canvas, 0, 0);
+    ctx.filter = 'none';
+    ctx.globalAlpha = 1;
+    ctx.restore();
+
+    drawTree(now);
+    filmGrain();
+
+    requestAnimationFrame(tick);
+  }
+
+  // Sidebar toggle
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+
+  // Clicking icons in collapsed mode: trigger the button action AND expand
+  document.querySelectorAll('.control-icon').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      if (!sidebar.classList.contains('expanded')) {
+        // Find the associated button in this control group and click it
+        const controlGroup = icon.closest('.control-group');
+        const btn = controlGroup?.querySelector('.control-btn');
+        if (btn) {
+          btn.click();
+        }
+        // Also expand the sidebar
+        sidebar.classList.add('expanded');
+      }
+    });
+  });
+
+  // Snow toggle
+  const toggleSnowBtn = document.getElementById('toggleSnow');
+  toggleSnowBtn.addEventListener('click', () => {
+    const snow = document.getElementById('snow');
+    const isVisible = snow.style.display !== 'none';
+    snow.style.display = isVisible ? 'none' : 'block';
+    toggleSnowBtn.textContent = isVisible ? 'Snow Off' : 'Snow On';
+    toggleSnowBtn.classList.toggle('active', !isVisible);
+  });
+
+  // Image overlay cycling through images
+  const toggleImageBtn = document.getElementById('toggleImage');
+  const imageOverlay = document.getElementById('imageOverlay');
+  const overlayImg = imageOverlay.querySelector('img');
+  const imageList = [
+    null, // Off state
+    'img/MerryChristmasMetallic.png',
+    'img/MC_HNY_d.png'
+  ];
+  let currentImageIndex = 1; // Start with first image visible
+
+  function updateImageOverlay() {
+    if (imageList[currentImageIndex] === null) {
+      imageOverlay.classList.remove('visible');
+      toggleImageBtn.textContent = 'Image Off';
+      toggleImageBtn.classList.remove('active');
+    } else {
+      overlayImg.src = imageList[currentImageIndex];
+      imageOverlay.classList.add('visible');
+      // Show short name
+      const fileName = imageList[currentImageIndex].split('/').pop().replace('.png', '');
+      toggleImageBtn.textContent = fileName.length > 12 ? fileName.slice(0, 12) + '...' : fileName;
+      toggleImageBtn.classList.add('active');
+    }
+  }
+
+  toggleImageBtn.addEventListener('click', () => {
+    currentImageIndex = (currentImageIndex + 1) % imageList.length;
+    updateImageOverlay();
+  });
+
+  // Set initial button text
+  updateImageOverlay();
+
+  // Fullscreen toggle
+  const toggleFullscreenBtn = document.getElementById('toggleFullscreen');
+  toggleFullscreenBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen?.();
+      toggleFullscreenBtn.classList.add('active');
+    } else {
+      document.exitFullscreen?.();
+      toggleFullscreenBtn.classList.remove('active');
+    }
+  });
+
+  // Sparkle control
+  const sparkleCtrl = document.getElementById('sparkleCtrl');
+  const sparkleVal = document.getElementById('sparkleVal');
+  sparkleCtrl.addEventListener('input', () => {
+    cfg.sparkle = parseFloat(sparkleCtrl.value);
+    sparkleVal.textContent = cfg.sparkle.toFixed(1);
+  });
+
+  // Font size cycling
+  const fontSizes = [
+    { scale: 1.0, label: '100%' },
+    { scale: 1.25, label: '125%' },
+    { scale: 1.5, label: '150%' },
+    { scale: 2.0, label: '200%' },
+    { scale: 2.5, label: '250%' }
+  ];
+  let fontSizeIndex = 0;
+  const fontSizeIndicator = document.getElementById('fontSizeIndicator');
+  const fontSizeBtn = document.getElementById('fontSizeBtn');
+  const fromContainer = document.querySelector('.from-container');
+  let fontSizeTimeout;
+
+  function cycleFontSize() {
+    fontSizeIndex = (fontSizeIndex + 1) % fontSizes.length;
+    const { scale, label } = fontSizes[fontSizeIndex];
+    fromContainer.style.transform = `translateX(-50%) scale(${scale})`;
+    fromContainer.style.transformOrigin = 'center bottom';
+
+    // Update button text
+    fontSizeBtn.textContent = 'Text Size: ' + label;
+
+    // Show indicator
+    fontSizeIndicator.textContent = label;
+    fontSizeIndicator.classList.remove('hiding');
+    fontSizeIndicator.classList.add('visible');
+
+    clearTimeout(fontSizeTimeout);
+    fontSizeTimeout = setTimeout(() => {
+      fontSizeIndicator.classList.add('hiding');
+      setTimeout(() => {
+        fontSizeIndicator.classList.remove('visible', 'hiding');
+      }, 300);
+    }, 1200);
+  }
+
+  // Font size button click
+  fontSizeBtn.addEventListener('click', cycleFontSize);
+
+  // Hotkey overlay
+  const hotkeyOverlay = document.getElementById('hotkeyOverlay');
+  let hotkeyVisible = false;
+
+  function showHotkeyHelp() {
+    hotkeyOverlay.classList.add('visible');
+    hotkeyVisible = true;
+  }
+
+  function hideHotkeyHelp() {
+    hotkeyOverlay.classList.remove('visible');
+    hotkeyVisible = false;
+  }
+
+  window.addEventListener('keydown', (e) => {
+    // Skip if typing in an input
+    if (e.target.tagName === 'INPUT' || e.target.isContentEditable) return;
+
+    const k = e.key.toLowerCase();
+
+    // If hotkey overlay is visible, any key dismisses it
+    if (hotkeyVisible && k !== '?') {
+      hideHotkeyHelp();
+      return;
+    }
+
+    // Escape: close modals or exit fullscreen
+    if (e.key === 'Escape') {
+      if (hotkeyVisible) { hideHotkeyHelp(); return; }
+      if (musicModal.classList.contains('visible')) { musicModal.classList.remove('visible'); return; }
+      if (document.fullscreenElement) { document.exitFullscreen?.(); return; }
+      return;
+    }
+
+    // ? or / : Show hotkey help
+    if (k === '?' || (e.shiftKey && k === '/')) {
+      showHotkeyHelp();
+      return;
+    }
+
+    // F: Toggle fullscreen
+    if (k === 'f') {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    }
+
+    // S: Toggle snow
+    if (k === 's') {
+      const snow = document.getElementById('snow');
+      const isVisible = snow.style.display !== 'none';
+      snow.style.display = isVisible ? 'none' : 'block';
+      toggleSnowBtn.textContent = isVisible ? 'Snow Off' : 'Snow On';
+      toggleSnowBtn.classList.toggle('active', !isVisible);
+    }
+
+    // C: Toggle controls sidebar
+    if (k === 'c') sidebar.classList.toggle('expanded');
+
+    // T: Cycle font size
+    if (k === 't') cycleFontSize();
+
+    // +/=: Increase sparkle
+    if (k === '+' || k === '=') {
+      cfg.sparkle = clamp(cfg.sparkle + 0.15, 0.2, 3.0);
+      sparkleCtrl.value = cfg.sparkle;
+      sparkleVal.textContent = cfg.sparkle.toFixed(1);
+    }
+
+    // -/_: Decrease sparkle
+    if (k === '-' || k === '_') {
+      cfg.sparkle = clamp(cfg.sparkle - 0.15, 0.2, 3.0);
+      sparkleCtrl.value = cfg.sparkle;
+      sparkleVal.textContent = cfg.sparkle.toFixed(1);
+    }
+
+    // I: Cycle image overlay
+    if (k === 'i') {
+      currentImageIndex = (currentImageIndex + 1) % imageList.length;
+      updateImageOverlay();
+    }
+
+    // M: Toggle music (play/stop)
+    if (k === 'm') {
+      if (ytReady) {
+        if (currentTrack >= 0) {
+          stopAllTracks();
+        } else {
+          if (playerReady[0]) playTrack(0);
+        }
+      }
+    }
+
+    // 1, 2, 3: Play specific music track
+    if (['1', '2', '3'].includes(k)) {
+      const trackIndex = parseInt(k) - 1;
+      if (ytReady) playTrack(trackIndex);
+    }
+  });
+
+  // Snow controls
+  function createSnowflakes() {
+    const container = document.getElementById('snow');
+    const density = parseInt(document.getElementById('snowDensity').value);
+    const speed = parseFloat(document.getElementById('snowSpeed').value);
+
+    container.innerHTML = '';
+
+    // Layer config: [count%, speedMult, sizeRange, opacityRange, blur, spin]
+    const layers = [
+      { pct: 0.25, speedMult: 2.5, size: [6, 10],  opacity: [0.2, 0.35], blur: [2.5, 4], spin: false },  // Back - blurry, slow
+      { pct: 0.35, speedMult: 1.5, size: [8, 14],  opacity: [0.35, 0.55], blur: [1, 2], spin: true },    // Mid
+      { pct: 0.40, speedMult: 1.0, size: [12, 22], opacity: [0.6, 0.9], blur: [0, 0], spin: true }       // Front - crisp, fast
+    ];
+
+    layers.forEach(layer => {
+      const count = Math.floor(density * layer.pct);
+
+      for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+
+        const inner = document.createElement('span');
+        inner.textContent = '❄';
+
+        const left = Math.random() * 120 - 10;
+        const size = layer.size[0] + Math.random() * (layer.size[1] - layer.size[0]);
+        const opacity = layer.opacity[0] + Math.random() * (layer.opacity[1] - layer.opacity[0]);
+        const blur = layer.blur[0] + Math.random() * (layer.blur[1] - layer.blur[0]);
+        const fallDuration = (speed * layer.speedMult) + Math.random() * speed * layer.speedMult;
+        const spinDuration = 2 + Math.random() * 6;
+        const delay = Math.random() * -fallDuration;
+
+        flake.style.cssText = `
+          left: ${left}vw;
+          font-size: ${size}px;
+          opacity: ${opacity};
+          animation-duration: ${fallDuration}s;
+          animation-delay: ${delay}s;
+          filter: blur(${blur}px);
+        `;
+
+        if (layer.spin) {
+          inner.style.animationDuration = spinDuration + 's';
+          inner.style.animationDelay = (Math.random() * -spinDuration) + 's';
+        } else {
+          inner.style.animation = 'none';
+        }
+
+        flake.appendChild(inner);
+        container.appendChild(flake);
+      }
+    });
+  }
+
+  function updateSnow() {
+    const density = parseInt(document.getElementById('snowDensity').value);
+    const speed = parseFloat(document.getElementById('snowSpeed').value);
+
+    document.getElementById('densityVal').textContent = density;
+    document.getElementById('speedVal').textContent = speed + 's';
+
+    createSnowflakes();
+  }
+
+  document.getElementById('snowDensity').addEventListener('input', updateSnow);
+  document.getElementById('snowSpeed').addEventListener('input', updateSnow);
+
+  // Handle contenteditable "From" input and prefix
+  const fromInput = document.getElementById('fromInput');
+  const fromPrefix = document.getElementById('fromPrefix');
+
+  // Load saved values from localStorage
+  const savedPrefix = localStorage.getItem('xmasCard_fromPrefix');
+  const savedName = localStorage.getItem('xmasCard_fromName');
+  if (savedPrefix !== null) fromPrefix.textContent = savedPrefix;
+  if (savedName !== null) fromInput.textContent = savedName;
+
+  // Save to localStorage on change
+  function saveFromFields() {
+    localStorage.setItem('xmasCard_fromPrefix', fromPrefix.textContent);
+    localStorage.setItem('xmasCard_fromName', fromInput.textContent);
+  }
+
+  // Prevent line breaks in editable fields and save on blur
+  [fromInput, fromPrefix].forEach(el => {
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        el.blur();
+      }
+    });
+    el.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const text = (e.clipboardData || window.clipboardData).getData('text/plain');
+      document.execCommand('insertText', false, text.replace(/\n/g, ' '));
+    });
+    el.addEventListener('blur', saveFromFields);
+    el.addEventListener('input', saveFromFields);
+  });
+
+  // Restore signature button
+  document.getElementById('restoreSignature').addEventListener('click', () => {
+    fromPrefix.textContent = 'From:';
+    fromInput.textContent = '';
+    saveFromFields();
+  });
+
+  // Initialize snowflakes
+  createSnowflakes();
+
+  resize();
+  initBg();
+  initTree();
+  requestAnimationFrame(tick);
+
+  // ========== MUSIC PLAYER ==========
+  const defaultTracks = [
+    'u-llX00huRE',  // Track 1
+    'ns1gReXtNag',  // Track 2
+    'XQvzdKy1YQQ'   // Track 3
+  ];
+
+  let musicTracks = [...defaultTracks];
+  let players = {};
+  let playerReady = {};
+  let currentTrack = -1;
+  let ytReady = false;
+
+  // Extract YouTube video ID from URL (supports music/shorts/live)
+  function extractYouTubeId(url) {
+    if (!url) return null;
+    // Already an ID
+    if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+    // Full URL patterns
+    const patterns = [
+      /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/.*[?&]v=([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+      /youtube\.com\/live\/([a-zA-Z0-9_-]{11})/
+    ];
+    for (const pattern of patterns) {
+      const match = url.match(pattern);
+      if (match) return match[1];
+    }
+    return null;
+  }
+
+  // Load YouTube IFrame API
+  const ytScript = document.createElement('script');
+  ytScript.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(ytScript);
+
+  window.onYouTubeIframeAPIReady = function() {
+    ytReady = true;
+    createPlayers();
+  };
+
+  function createPlayers() {
+    const container = document.getElementById('ytPlayers');
+    container.innerHTML = '';
+    players = {};
+    playerReady = {};
+    const origin = window.location.origin && window.location.origin !== 'null'
+      ? window.location.origin
+      : null;
+
+    musicTracks.forEach((videoId, i) => {
+      if (!videoId) return;
+      const div = document.createElement('div');
+      div.id = 'ytPlayer' + i;
+      container.appendChild(div);
+
+      players[i] = new YT.Player('ytPlayer' + i, {
+        height: '100',
+        width: '100',
+        videoId: videoId,
+        playerVars: {
+          autoplay: 0,
+          controls: 0,
+          disablekb: 1,
+          fs: 0,
+          loop: 1,
+          modestbranding: 1,
+          playlist: videoId,
+          playsinline: 1,
+          ...(origin ? { origin } : {})
+        },
+        events: {
+          onReady: (event) => {
+            playerReady[i] = true;
+            event.target.setVolume(70);
+          },
+          onStateChange: (e) => {
+            // Update track state based on player state
+            const track = document.querySelector(`.music-track[data-track="${i}"]`);
+            if (e.data === YT.PlayerState.PLAYING) {
+              track?.classList.add('playing');
+              currentTrack = i;
+            } else if (e.data === YT.PlayerState.PAUSED) {
+              if (currentTrack !== i) {
+                track?.classList.remove('playing');
+              }
+            }
+            // Loop when ended
+            if (e.data === YT.PlayerState.ENDED) {
+              e.target.playVideo();
+            }
+          },
+          onError: (e) => {
+            console.log('YouTube Player Error:', e.data);
+          }
+        }
+      });
+    });
+  }
+
+  function stopAllTracks() {
+    Object.keys(players).forEach(key => {
+      const i = parseInt(key);
+      if (players[i] && typeof players[i].pauseVideo === 'function') {
+        try {
+          players[i].pauseVideo();
+          players[i].seekTo(0);
+        } catch(e) {}
+      }
+    });
+    document.querySelectorAll('.music-track').forEach(t => t.classList.remove('playing'));
+    currentTrack = -1;
+  }
+
+  function playTrack(index) {
+    // Stop all tracks first
+    stopAllTracks();
+
+    // Play selected track
+    if (players[index] && playerReady[index]) {
+      try {
+        players[index].seekTo(0);
+        players[index].playVideo();
+        document.querySelector(`.music-track[data-track="${index}"]`).classList.add('playing');
+        currentTrack = index;
+      } catch(e) {
+        console.log('Error playing track:', e);
+      }
+    } else {
+      console.log('Player not ready yet for track', index);
+    }
+  }
+
+  function stopTrack(index) {
+    if (players[index] && typeof players[index].pauseVideo === 'function') {
+      try {
+        players[index].pauseVideo();
+        players[index].seekTo(0);
+      } catch(e) {}
+    }
+    document.querySelector(`.music-track[data-track="${index}"]`)?.classList.remove('playing');
+    if (currentTrack === index) {
+      currentTrack = -1;
+    }
+  }
+
+  // Music control button clicks
+  document.querySelectorAll('.music-ctrl-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const track = parseInt(btn.closest('.music-track').dataset.track);
+      const action = btn.dataset.action;
+
+      if (!ytReady) {
+        alert('Music player is loading, please wait...');
+        return;
+      }
+      if (!playerReady[track]) {
+        alert('This track is still loading, please wait a moment...');
+        return;
+      }
+
+      if (action === 'play') {
+        playTrack(track);
+      } else if (action === 'stop') {
+        stopTrack(track);
+      }
+    });
+  });
+
+  // Stop All button
+  document.getElementById('stopAllMusic').addEventListener('click', () => {
+    stopAllTracks();
+  });
+
+  // Music modal
+  const musicModal = document.getElementById('musicModal');
+
+  document.getElementById('editMusicUrls').addEventListener('click', () => {
+    // Populate inputs with current URLs
+    musicTracks.forEach((id, i) => {
+      document.getElementById('musicUrl' + i).value = id ? 'https://youtube.com/watch?v=' + id : '';
+    });
+    musicModal.classList.add('visible');
+  });
+
+  document.getElementById('closeMusicModal').addEventListener('click', () => {
+    musicModal.classList.remove('visible');
+  });
+
+  document.getElementById('saveMusicUrls').addEventListener('click', () => {
+    const newTracks = [];
+    for (let i = 0; i < 3; i++) {
+      const url = document.getElementById('musicUrl' + i).value.trim();
+      newTracks[i] = extractYouTubeId(url) || defaultTracks[i];
+    }
+    musicTracks = newTracks;
+
+    // Stop current playback
+    currentTrack = -1;
+    document.querySelectorAll('.music-btn').forEach(btn => btn.classList.remove('playing'));
+
+    // Recreate players
+    if (ytReady) {
+      createPlayers();
+    }
+
+    musicModal.classList.remove('visible');
+  });
+
+  // Close modal on outside click
+  musicModal.addEventListener('click', (e) => {
+    if (e.target === musicModal) {
+      musicModal.classList.remove('visible');
+    }
+  });
+
+  // Views counter
+  fetch('https://api.counterapi.dev/v1/xmas-tree-card/visits/up')
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById('viewCount').textContent = data.count.toLocaleString();
+    })
+    .catch(() => {
+      document.querySelector('.views-counter').style.display = 'none';
+    });
+
+})();
+</script>
+</body>
+</html>
