@@ -22,8 +22,8 @@
   <meta name="twitter:description" content="Interactive Christmas card with animated tree, twinkling lights, and holiday music">
   <meta name="twitter:image" content="img/Merry Xmas.png">
 
-  <!-- Apple Web App -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <!-- Web App -->
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Merry Xmas">
 
@@ -2119,9 +2119,8 @@
     players = {};
     playerReady = {};
 
-    // Only send origin if running on a server (http/https)
-    const isServer = window.location.protocol.startsWith('http');
-    const origin = isServer ? window.location.origin : undefined;
+    // Set origin to current domain for postMessage security
+    const origin = window.location.origin;
 
     musicTracks.forEach((videoId, i) => {
       if (!videoId) return;
@@ -2143,7 +2142,7 @@
           modestbranding: 1,
           playlist: videoId,
           playsinline: 1,
-          ...(origin ? { origin } : {})
+          origin: origin
         },
         events: {
           onReady: (event) => {
