@@ -2642,6 +2642,16 @@
           entry.appendChild(flag);
           entry.appendChild(countEl);
           entry.dataset.tooltip = `${countryName(code)} (${count})`;
+
+          // Flag cursor on hover
+          const flagEmoji = countryToFlag(code);
+          entry.addEventListener('mouseenter', () => {
+            entry.style.cursor = `url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">${flagEmoji}</text></svg>') 16 16, auto`;
+          });
+          entry.addEventListener('mouseleave', () => {
+            entry.style.cursor = 'pointer';
+          });
+
           leaderboard.appendChild(entry);
         });
 
