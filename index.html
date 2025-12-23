@@ -465,6 +465,11 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      margin-left: 0;
+      transition: margin-left 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .musicbar.sidebar-open .musicbar-left {
+      margin-left: 220px;
     }
     .musicbar-play-btn {
       width: 36px;
@@ -1557,7 +1562,15 @@
   // Sidebar toggle
   const sidebar = document.getElementById('sidebar');
   const sidebarToggle = document.getElementById('sidebarToggle');
-  sidebarToggle.addEventListener('click', () => sidebar.classList.toggle('expanded'));
+  const musicbarEl = document.getElementById('musicbar');
+
+  function toggleSidebar() {
+    sidebar.classList.toggle('expanded');
+    // Sync musicbar position with sidebar state
+    musicbarEl.classList.toggle('sidebar-open', sidebar.classList.contains('expanded'));
+  }
+
+  sidebarToggle.addEventListener('click', toggleSidebar);
 
   // Clicking icons in collapsed mode: trigger the button action AND expand
   document.querySelectorAll('.control-icon').forEach(icon => {
@@ -1569,8 +1582,9 @@
         if (btn) {
           btn.click();
         }
-        // Also expand the sidebar
+        // Also expand the sidebar and sync musicbar
         sidebar.classList.add('expanded');
+        musicbarEl.classList.add('sidebar-open');
       }
     });
   });
@@ -1802,7 +1816,7 @@
     }
 
     // C: Toggle controls sidebar
-    if (k === 'c') sidebar.classList.toggle('expanded');
+    if (k === 'c') toggleSidebar();
 
     // T: Cycle font size
     if (k === 't') cycleFontSize();
