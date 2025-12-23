@@ -966,6 +966,51 @@
       opacity: 0 !important;
       pointer-events: none !important;
     }
+    /* Visitor flags container */
+    .visitor-flags {
+      position: fixed;
+      top: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      max-width: 70%;
+      z-index: 80;
+      padding: 8px 16px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .visitor-flags.visible {
+      opacity: 1;
+    }
+    .visitor-flags:empty {
+      display: none;
+    }
+    .visitor-flag {
+      font-size: 20px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      animation: flagPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+      transform: scale(0);
+    }
+    @keyframes flagPop {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    :fullscreen .visitor-flags,
+    :-webkit-full-screen .visitor-flags {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
   </style>
 </head>
 <body>
@@ -1210,6 +1255,9 @@
 
 <!-- Font Size Indicator -->
 <div class="font-size-indicator" id="fontSizeIndicator">100%</div>
+
+<!-- Visitor flags from around the world -->
+<div class="visitor-flags" id="visitorFlags"></div>
 
 <div class="hint">Press [?] for keyboard shortcuts</div>
 <div class="views-counter"><span id="viewCount"></span> views</div>
@@ -2424,6 +2472,96 @@
     .catch(() => {
       document.querySelector('.views-counter').style.display = 'none';
     });
+
+  // ========== VISITOR FLAGS ==========
+  // Firebase config - REPLACE with your own Firebase project config
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  // Country code to flag emoji converter
+  function countryToFlag(countryCode) {
+    if (!countryCode || countryCode.length !== 2) return '';
+    const codePoints = countryCode
+      .toUpperCase()
+      .split('')
+      .map(char => 127397 + char.charCodeAt(0));
+    return String.fromCodePoint(...codePoints);
+  }
+
+  // Initialize visitor flags system
+  async function initVisitorFlags() {
+    const flagsContainer = document.getElementById('visitorFlags');
+
+    // Check if Firebase config is set up
+    if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+      console.log('Visitor flags: Firebase not configured. See instructions in code.');
+      return;
+    }
+
+    try {
+      // Dynamically load Firebase
+      const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js');
+      const { getDatabase, ref, set, onValue } = await import('https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js');
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      const countriesRef = ref(db, 'visitor-countries');
+
+      // Get visitor's country from IP
+      const geoResponse = await fetch('https://ipapi.co/json/');
+      const geoData = await geoResponse.json();
+      const countryCode = geoData.country_code;
+
+      if (countryCode) {
+        // Add this country to Firebase (uses country code as key, so duplicates are automatic)
+        const countryRef = ref(db, `visitor-countries/${countryCode}`);
+        await set(countryRef, {
+          code: countryCode,
+          name: geoData.country_name,
+          addedAt: Date.now()
+        });
+      }
+
+      // Listen for all countries in real-time
+      onValue(countriesRef, (snapshot) => {
+        const countries = snapshot.val();
+        if (!countries) return;
+
+        // Clear and rebuild flags
+        flagsContainer.innerHTML = '';
+
+        // Sort by when they were added
+        const sortedCountries = Object.values(countries)
+          .sort((a, b) => (a.addedAt || 0) - (b.addedAt || 0));
+
+        sortedCountries.forEach((country, index) => {
+          const flag = document.createElement('span');
+          flag.className = 'visitor-flag';
+          flag.textContent = countryToFlag(country.code);
+          flag.title = country.name;
+          flag.style.animationDelay = `${index * 0.05}s`;
+          flagsContainer.appendChild(flag);
+        });
+
+        // Show container
+        flagsContainer.classList.add('visible');
+      });
+
+    } catch (error) {
+      console.log('Visitor flags error:', error.message);
+    }
+  }
+
+  // Initialize visitor flags
+  initVisitorFlags();
 
 })();
 </script>
