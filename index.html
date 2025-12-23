@@ -491,6 +491,38 @@
       background-clip: text;
       filter: drop-shadow(0 1px 2px rgba(0,0,0,0.1));
     }
+
+    /* 24K Gold - Refined gold with animated shimmer */
+    @keyframes goldShimmer {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .from-wrapper.liquid-gold,
+    .from-wrapper.liquid-gold .from-name,
+    .from-wrapper.liquid-gold .from-prefix {
+      background: linear-gradient(
+        135deg,
+        #a67c3d 0%,
+        #c9a55c 12%,
+        #f0dca0 28%,
+        #fffef0 42%,
+        #f5e6b8 50%,
+        #d4b36a 62%,
+        #f0dca0 75%,
+        #c9a55c 88%,
+        #a67c3d 100%
+      );
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: goldShimmer 4s ease-in-out infinite;
+      filter:
+        drop-shadow(0 1px 0 rgba(255,250,220,0.4))
+        drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+    }
+
     /* Musicbar Footer - Minimalist YouTube style */
     .musicbar {
       position: fixed;
@@ -1913,13 +1945,14 @@
     { class: 'metallic-gold', label: 'Platinum' },
     { class: 'bimetallic', label: 'Chrome' },
     { class: 'gold-stripes', label: 'Titanium' },
-    { class: 'chrome', label: 'Champagne' }
+    { class: 'chrome', label: 'Champagne' },
+    { class: 'liquid-gold', label: '24K Gold' }
   ];
   let textureIndex = 0;
 
   function cycleTexture() {
     // Remove current texture class
-    fromWrapper.classList.remove('metallic-gold', 'gold-stripes', 'bimetallic', 'chrome');
+    fromWrapper.classList.remove('metallic-gold', 'gold-stripes', 'bimetallic', 'chrome', 'liquid-gold');
 
     textureIndex = (textureIndex + 1) % textures.length;
     const { class: cls, label } = textures[textureIndex];
