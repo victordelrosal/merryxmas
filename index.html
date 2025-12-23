@@ -407,6 +407,27 @@
     .from-prefix:empty {
       display: none;
     }
+    /* Metallic text effects */
+    .from-wrapper.metallic-gold,
+    .from-wrapper.metallic-gold .from-name,
+    .from-wrapper.metallic-gold .from-prefix {
+      background: linear-gradient(180deg,
+        #bf953f 0%, #fcf6ba 25%, #aa771c 50%, #fcf6ba 75%, #bf953f 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
+    .from-wrapper.bimetallic,
+    .from-wrapper.bimetallic .from-name,
+    .from-wrapper.bimetallic .from-prefix {
+      background: linear-gradient(180deg,
+        #c0c0c0 0%, #f5f5f5 15%, #d4af37 30%, #ffd700 50%, #d4af37 70%, #f5f5f5 85%, #c0c0c0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+    }
     /* Musicbar Footer - Minimalist YouTube style */
     .musicbar {
       position: fixed;
@@ -1193,6 +1214,16 @@
       </div>
     </div>
 
+    <!-- Font Texture -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.5 5.5l13 13M18.5 5.5l-13 13"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn" id="fontTextureBtn">Texture: Regular</button>
+      </div>
+    </div>
+
     <!-- Toggle Text Visibility -->
     <div class="control-group">
       <div class="control-icon">
@@ -1810,6 +1841,32 @@
 
   // Font size button click
   fontSizeBtn.addEventListener('click', cycleFontSize);
+
+  // Font texture toggle
+  const fontTextureBtn = document.getElementById('fontTextureBtn');
+  const fromWrapper = document.querySelector('.from-wrapper');
+  const textures = [
+    { class: '', label: 'Regular' },
+    { class: 'metallic-gold', label: 'Gold' },
+    { class: 'bimetallic', label: 'Bimetallic' }
+  ];
+  let textureIndex = 0;
+
+  function cycleTexture() {
+    // Remove current texture class
+    fromWrapper.classList.remove('metallic-gold', 'bimetallic');
+
+    textureIndex = (textureIndex + 1) % textures.length;
+    const { class: cls, label } = textures[textureIndex];
+
+    if (cls) {
+      fromWrapper.classList.add(cls);
+    }
+
+    fontTextureBtn.textContent = 'Texture: ' + label;
+  }
+
+  fontTextureBtn.addEventListener('click', cycleTexture);
 
   // Random settings button
   const randomBtn = document.getElementById('randomBtn');
