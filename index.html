@@ -308,6 +308,15 @@
       max-height: 85%;
       object-fit: contain;
     }
+    /* Happy NY image - smaller and aligned to tree star */
+    .image-overlay.happy-ny {
+      align-items: flex-start;
+      padding-top: 7%;
+    }
+    .image-overlay.happy-ny img {
+      max-width: 64%;
+      max-height: 64%;
+    }
     /* From signature */
     .from-container {
       position: fixed;
@@ -371,93 +380,129 @@
     .from-prefix:empty {
       display: none;
     }
-    /* Music controls */
-    .music-player {
+    /* Musicbar Footer */
+    .musicbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: auto;
+      background: linear-gradient(180deg,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,255,255,0.04) 50%,
+        rgba(255,255,255,0.02) 100%);
+      backdrop-filter: blur(20px) saturate(1.4);
+      -webkit-backdrop-filter: blur(20px) saturate(1.4);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.1),
+        0 -4px 30px rgba(0,0,0,0.3);
+      z-index: 90;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font: 11px/1.4 system-ui, -apple-system, sans-serif;
+      color: rgba(255,255,255,0.85);
+    }
+    .musicbar-tracks {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .musicbar-tracks::-webkit-scrollbar { display: none; }
+    .musicbar-track {
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 4px;
+      min-width: 120px;
+      padding: 8px 10px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.25s ease;
     }
-    .music-track {
+    .musicbar-track:hover {
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+    .musicbar-track.playing {
+      background: linear-gradient(135deg, rgba(100,200,150,0.2), rgba(80,180,130,0.08));
+      border-color: rgba(100,200,150,0.4);
+      box-shadow: 0 0 20px rgba(100,200,150,0.15);
+    }
+    .musicbar-track-header {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 6px 8px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 8px;
-      transition: all 0.25s ease;
     }
-    .music-track:hover {
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
-      border-color: rgba(255,255,255,0.15);
-    }
-    .music-track.playing {
-      background: linear-gradient(135deg, rgba(100,200,150,0.15), rgba(80,180,130,0.05));
-      border-color: rgba(100,200,150,0.3);
-      box-shadow: 0 0 20px rgba(100,200,150,0.15), inset 0 0 20px rgba(100,200,150,0.05);
-    }
-    .music-track-name {
-      flex: 1;
+    .musicbar-track-name {
       font-size: 10px;
-      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+      color: rgba(255,255,255,0.9);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      flex: 1;
     }
-    .music-track.playing .music-track-name {
-      color: rgba(200,255,220,0.95);
+    .musicbar-track.playing .musicbar-track-name {
+      color: rgba(200,255,220,1);
     }
-    .music-track-btns {
-      display: flex;
-      gap: 3px;
+    .musicbar-play-icon {
+      width: 16px;
+      height: 16px;
+      fill: rgba(150,255,180,0.8);
+      flex-shrink: 0;
     }
-    .music-ctrl-btn {
-      width: 24px;
-      height: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 6px;
+    .musicbar-track.playing .musicbar-play-icon {
+      fill: rgba(200,255,220,1);
+    }
+    .musicbar-seek {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 2px;
+      overflow: hidden;
       cursor: pointer;
-      transition: all 0.2s ease;
-      padding: 0;
     }
-    .music-ctrl-btn:hover {
-      background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));
-      border-color: rgba(255,255,255,0.25);
-      transform: scale(1.08);
+    .musicbar-seek-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(150,255,180,0.7), rgba(100,200,150,0.9));
+      border-radius: 2px;
+      transition: width 0.1s linear;
     }
-    .music-ctrl-btn:active {
-      transform: scale(0.95);
-    }
-    .music-ctrl-btn svg {
-      width: 12px;
-      height: 12px;
-      fill: rgba(255,255,255,0.8);
-    }
-    .music-ctrl-btn.play-btn svg { fill: rgba(150,255,180,0.9); }
-    .music-ctrl-btn.stop-btn svg { fill: rgba(255,150,150,0.9); }
-    .music-global-controls {
+    .musicbar-controls {
       display: flex;
       gap: 6px;
-      margin-top: 4px;
+      flex-shrink: 0;
     }
-    .music-global-btn {
-      flex: 1;
-      padding: 5px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 6px;
-      color: rgba(255,255,255,0.7);
-      font-size: 9px;
+    .musicbar-btn {
+      padding: 6px 12px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.04));
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      color: rgba(255,255,255,0.8);
+      font-size: 10px;
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .music-global-btn:hover {
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.95);
+    .musicbar-btn:hover {
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+      border-color: rgba(255,255,255,0.25);
+    }
+    :fullscreen .musicbar {
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+    :-webkit-full-screen .musicbar {
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
     /* Music Modal */
     .music-modal {
@@ -541,7 +586,7 @@
     /* Views counter */
     .views-counter {
       position: fixed;
-      bottom: 12px;
+      bottom: 70px;
       right: 16px;
       font: 11px/1.4 system-ui, -apple-system, sans-serif;
       color: rgba(255,255,255,0.4);
@@ -672,7 +717,7 @@
 <canvas id="c"></canvas>
 <div class="snow-container" id="snow"></div>
 <div class="image-overlay visible" id="imageOverlay">
-  <img src="img/MerryChristmasMetallic.png" alt="Merry Christmas">
+  <img src="img/Merry Xmas.png" alt="Merry Christmas">
 </div>
 
 <div class="from-container">
@@ -699,8 +744,8 @@
       <div class="control-content">
         <div class="control-label">Snow Density</div>
         <div class="control-row">
-          <input type="range" id="snowDensity" min="20" max="200" value="20">
-          <span class="control-value" id="densityVal">20</span>
+          <input type="range" id="snowDensity" min="20" max="200" value="110">
+          <span class="control-value" id="densityVal">110</span>
         </div>
       </div>
     </div>
@@ -775,6 +820,16 @@
       </div>
     </div>
 
+    <!-- Toggle Text Visibility -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn active" id="toggleText">Text On</button>
+      </div>
+    </div>
+
     <!-- Restore Text -->
     <div class="control-group">
       <div class="control-icon">
@@ -785,58 +840,52 @@
       </div>
     </div>
   </div>
+</aside>
 
-  <!-- Music Section -->
-  <div class="sidebar-section">
-    <div class="control-group">
-      <div class="control-icon">
-        <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+<!-- Musicbar Footer -->
+<div class="musicbar" id="musicbar">
+  <div class="musicbar-tracks">
+    <div class="musicbar-track" data-track="0">
+      <div class="musicbar-track-header">
+        <svg class="musicbar-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        <span class="musicbar-track-name">Carol of the Bells</span>
       </div>
-      <div class="control-content">
-        <div class="control-label">Music</div>
-        <div class="music-player">
-          <div class="music-track" data-track="0">
-            <span class="music-track-name">Track 1</span>
-            <div class="music-track-btns">
-              <button class="music-ctrl-btn play-btn" data-action="play" title="Play">
-                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-              </button>
-              <button class="music-ctrl-btn stop-btn" data-action="stop" title="Stop">
-                <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-              </button>
-            </div>
-          </div>
-          <div class="music-track" data-track="1">
-            <span class="music-track-name">Track 2</span>
-            <div class="music-track-btns">
-              <button class="music-ctrl-btn play-btn" data-action="play" title="Play">
-                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-              </button>
-              <button class="music-ctrl-btn stop-btn" data-action="stop" title="Stop">
-                <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-              </button>
-            </div>
-          </div>
-          <div class="music-track" data-track="2">
-            <span class="music-track-name">Track 3</span>
-            <div class="music-track-btns">
-              <button class="music-ctrl-btn play-btn" data-action="play" title="Play">
-                <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
-              </button>
-              <button class="music-ctrl-btn stop-btn" data-action="stop" title="Stop">
-                <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/></svg>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="music-global-controls">
-          <button class="music-global-btn" id="stopAllMusic">Stop All</button>
-          <button class="music-global-btn" id="editMusicUrls">Edit URLs</button>
-        </div>
+      <div class="musicbar-seek" data-track="0"><div class="musicbar-seek-bar"></div></div>
+    </div>
+    <div class="musicbar-track" data-track="1">
+      <div class="musicbar-track-header">
+        <svg class="musicbar-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        <span class="musicbar-track-name">Silent Night</span>
       </div>
+      <div class="musicbar-seek" data-track="1"><div class="musicbar-seek-bar"></div></div>
+    </div>
+    <div class="musicbar-track" data-track="2">
+      <div class="musicbar-track-header">
+        <svg class="musicbar-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        <span class="musicbar-track-name">O Holy Night</span>
+      </div>
+      <div class="musicbar-seek" data-track="2"><div class="musicbar-seek-bar"></div></div>
+    </div>
+    <div class="musicbar-track" data-track="3">
+      <div class="musicbar-track-header">
+        <svg class="musicbar-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        <span class="musicbar-track-name">Jingle Bells</span>
+      </div>
+      <div class="musicbar-seek" data-track="3"><div class="musicbar-seek-bar"></div></div>
+    </div>
+    <div class="musicbar-track" data-track="4">
+      <div class="musicbar-track-header">
+        <svg class="musicbar-play-icon" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        <span class="musicbar-track-name">Winter Wonderland</span>
+      </div>
+      <div class="musicbar-seek" data-track="4"><div class="musicbar-seek-bar"></div></div>
     </div>
   </div>
-</aside>
+  <div class="musicbar-controls">
+    <button class="musicbar-btn" id="stopAllMusic">Stop</button>
+    <button class="musicbar-btn" id="editMusicUrls">Edit</button>
+  </div>
+</div>
 
 <!-- Music URL Editor Modal -->
 <div class="music-modal" id="musicModal">
@@ -847,6 +896,8 @@
       <label>Track 1: <input type="text" id="musicUrl0" placeholder="YouTube URL"></label>
       <label>Track 2: <input type="text" id="musicUrl1" placeholder="YouTube URL"></label>
       <label>Track 3: <input type="text" id="musicUrl2" placeholder="YouTube URL"></label>
+      <label>Track 4: <input type="text" id="musicUrl3" placeholder="YouTube URL"></label>
+      <label>Track 5: <input type="text" id="musicUrl4" placeholder="YouTube URL"></label>
     </div>
     <div class="music-modal-btns">
       <button class="control-btn" id="saveMusicUrls">Save</button>
@@ -869,7 +920,7 @@
       <div class="hotkey-item"><span class="hotkey-key">M</span><span class="hotkey-desc">Toggle music</span></div>
       <div class="hotkey-item"><span class="hotkey-key">I</span><span class="hotkey-desc">Toggle image overlay</span></div>
       <div class="hotkey-item"><span class="hotkey-key">T</span><span class="hotkey-desc">Cycle font size</span></div>
-      <div class="hotkey-item"><span class="hotkey-key">1 2 3</span><span class="hotkey-desc">Play music track</span></div>
+      <div class="hotkey-item"><span class="hotkey-key">1-5</span><span class="hotkey-desc">Play music track</span></div>
       <div class="hotkey-item"><span class="hotkey-key">+ −</span><span class="hotkey-desc">Adjust sparkle</span></div>
       <div class="hotkey-item"><span class="hotkey-key">?</span><span class="hotkey-desc">Show this help</span></div>
       <div class="hotkey-item"><span class="hotkey-key">Esc</span><span class="hotkey-desc">Close / Exit</span></div>
@@ -1206,19 +1257,21 @@
   const overlayImg = imageOverlay.querySelector('img');
   const imageList = [
     null, // Off state
-    'img/MerryChristmasMetallic.png',
-    'img/MC_HNY_d.png'
+    'img/Merry Xmas.png',
+    'img/Happy NY.png'
   ];
   let currentImageIndex = 1; // Start with first image visible
 
   function updateImageOverlay() {
     if (imageList[currentImageIndex] === null) {
-      imageOverlay.classList.remove('visible');
+      imageOverlay.classList.remove('visible', 'happy-ny');
       toggleImageBtn.textContent = 'Image Off';
       toggleImageBtn.classList.remove('active');
     } else {
       overlayImg.src = imageList[currentImageIndex];
       imageOverlay.classList.add('visible');
+      // Apply special class for Happy NY image (index 2)
+      imageOverlay.classList.toggle('happy-ny', currentImageIndex === 2);
       // Show short name
       const fileName = imageList[currentImageIndex].split('/').pop().replace('.png', '');
       toggleImageBtn.textContent = fileName.length > 12 ? fileName.slice(0, 12) + '...' : fileName;
@@ -1384,10 +1437,10 @@
       }
     }
 
-    // 1, 2, 3: Play specific music track
-    if (['1', '2', '3'].includes(k)) {
+    // 1-5: Play specific music track
+    if (['1', '2', '3', '4', '5'].includes(k)) {
       const trackIndex = parseInt(k) - 1;
-      if (ytReady) playTrack(trackIndex);
+      if (ytReady && musicTracks[trackIndex]) playTrack(trackIndex);
     }
   });
 
@@ -1499,6 +1552,25 @@
     saveFromFields();
   });
 
+  // Text visibility toggle
+  const toggleTextBtn = document.getElementById('toggleText');
+  let textVisible = localStorage.getItem('xmasCard_textVisible') !== 'false';
+
+  function updateTextVisibility() {
+    fromContainer.style.opacity = textVisible ? '1' : '0';
+    fromContainer.style.pointerEvents = textVisible ? 'auto' : 'none';
+    toggleTextBtn.textContent = textVisible ? 'Text On' : 'Text Off';
+    toggleTextBtn.classList.toggle('active', textVisible);
+    localStorage.setItem('xmasCard_textVisible', textVisible);
+  }
+
+  updateTextVisibility();
+
+  toggleTextBtn.addEventListener('click', () => {
+    textVisible = !textVisible;
+    updateTextVisibility();
+  });
+
   // Initialize snowflakes
   createSnowflakes();
 
@@ -1511,7 +1583,9 @@
   const defaultTracks = [
     'u-llX00huRE',  // Track 1
     'ns1gReXtNag',  // Track 2
-    'XQvzdKy1YQQ'   // Track 3
+    'XQvzdKy1YQQ',  // Track 3
+    'nCIO60uatRY',  // Track 4
+    '6SlwnNKsidw'   // Track 5
   ];
 
   let musicTracks = [...defaultTracks];
@@ -1589,18 +1663,29 @@
           },
           onStateChange: (e) => {
             // Update track state based on player state
-            const track = document.querySelector(`.music-track[data-track="${i}"]`);
+            const track = document.querySelector(`.musicbar-track[data-track="${i}"]`);
             if (e.data === YT.PlayerState.PLAYING) {
+              // Stop all OTHER tracks when this one starts playing
+              Object.keys(players).forEach(key => {
+                const idx = parseInt(key);
+                if (idx !== i && players[idx] && typeof players[idx].pauseVideo === 'function') {
+                  try { players[idx].pauseVideo(); } catch(err) {}
+                }
+              });
+              document.querySelectorAll('.musicbar-track').forEach(t => t.classList.remove('playing'));
               track?.classList.add('playing');
               currentTrack = i;
-            } else if (e.data === YT.PlayerState.PAUSED) {
-              if (currentTrack !== i) {
-                track?.classList.remove('playing');
+            } else if (e.data === YT.PlayerState.ENDED) {
+              // Play next track in loop (all 5 songs cycle)
+              const nextTrack = (i + 1) % musicTracks.length;
+              if (musicTracks[nextTrack] && playerReady[nextTrack]) {
+                playTrack(nextTrack);
               }
-            }
-            // Loop when ended
-            if (e.data === YT.PlayerState.ENDED) {
-              e.target.playVideo();
+            } else if (e.data === YT.PlayerState.PAUSED) {
+              if (currentTrack === i) {
+                track?.classList.remove('playing');
+                currentTrack = -1;
+              }
             }
           },
           onError: (e) => {
@@ -1621,7 +1706,8 @@
         } catch(e) {}
       }
     });
-    document.querySelectorAll('.music-track').forEach(t => t.classList.remove('playing'));
+    document.querySelectorAll('.musicbar-track').forEach(t => t.classList.remove('playing'));
+    document.querySelectorAll('.musicbar-seek-bar').forEach(bar => bar.style.width = '0%');
     currentTrack = -1;
   }
 
@@ -1634,7 +1720,7 @@
       try {
         players[index].seekTo(0);
         players[index].playVideo();
-        document.querySelector(`.music-track[data-track="${index}"]`).classList.add('playing');
+        document.querySelector(`.musicbar-track[data-track="${index}"]`)?.classList.add('playing');
         currentTrack = index;
       } catch(e) {
         console.log('Error playing track:', e);
@@ -1651,19 +1737,55 @@
         players[index].seekTo(0);
       } catch(e) {}
     }
-    document.querySelector(`.music-track[data-track="${index}"]`)?.classList.remove('playing');
+    document.querySelector(`.musicbar-track[data-track="${index}"]`)?.classList.remove('playing');
+    // Reset seek bar
+    const seekBar = document.querySelector(`.musicbar-seek[data-track="${index}"] .musicbar-seek-bar`);
+    if (seekBar) seekBar.style.width = '0%';
     if (currentTrack === index) {
       currentTrack = -1;
     }
   }
 
-  // Music control button clicks
-  document.querySelectorAll('.music-ctrl-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const track = parseInt(btn.closest('.music-track').dataset.track);
-      const action = btn.dataset.action;
+  // Update seek bar progress
+  setInterval(() => {
+    if (currentTrack >= 0 && players[currentTrack] && playerReady[currentTrack]) {
+      try {
+        const player = players[currentTrack];
+        const duration = player.getDuration();
+        const currentTime = player.getCurrentTime();
+        if (duration > 0) {
+          const percent = (currentTime / duration) * 100;
+          const seekBar = document.querySelector(`.musicbar-seek[data-track="${currentTrack}"] .musicbar-seek-bar`);
+          if (seekBar) seekBar.style.width = percent + '%';
+        }
+      } catch(e) {}
+    }
+  }, 500);
 
+  // Seek bar click to jump
+  document.querySelectorAll('.musicbar-seek').forEach(seekEl => {
+    seekEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const track = parseInt(seekEl.dataset.track);
+      if (players[track] && playerReady[track]) {
+        const rect = seekEl.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const percent = clickX / rect.width;
+        const duration = players[track].getDuration();
+        if (duration > 0) {
+          players[track].seekTo(percent * duration, true);
+        }
+      }
+    });
+  });
+
+  // Musicbar track click to play/stop
+  document.querySelectorAll('.musicbar-track').forEach(trackEl => {
+    trackEl.addEventListener('click', (e) => {
+      // Don't trigger if clicking seek bar
+      if (e.target.closest('.musicbar-seek')) return;
+
+      const track = parseInt(trackEl.dataset.track);
       if (!ytReady) {
         alert('Music player is loading, please wait...');
         return;
@@ -1673,10 +1795,11 @@
         return;
       }
 
-      if (action === 'play') {
-        playTrack(track);
-      } else if (action === 'stop') {
+      // Toggle: if playing, stop; otherwise play
+      if (currentTrack === track) {
         stopTrack(track);
+      } else {
+        playTrack(track);
       }
     });
   });
@@ -1703,9 +1826,9 @@
 
   document.getElementById('saveMusicUrls').addEventListener('click', () => {
     const newTracks = [];
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 5; i++) {
       const url = document.getElementById('musicUrl' + i).value.trim();
-      newTracks[i] = extractYouTubeId(url) || defaultTracks[i];
+      newTracks[i] = extractYouTubeId(url) || defaultTracks[i] || '';
     }
     musicTracks = newTracks;
 
