@@ -1360,11 +1360,11 @@
 
   function mix(a,b,u){ return { r: lerp(a.r,b.r,u), g: lerp(a.g,b.g,u), b: lerp(a.b,b.b,u) }; }
 
-  // Background bokeh - reduced count for performance
+  // Background bokeh
   const bgBokeh = [];
   function initBg() {
     bgBokeh.length = 0;
-    const n = Math.floor(60 * Math.sqrt((innerWidth*innerHeight)/(1280*720)));
+    const n = Math.floor(120 * Math.sqrt((innerWidth*innerHeight)/(1280*720)));
     for (let i=0;i<n;i++){
       const z = rand(1.0, 0.2);
       bgBokeh.push({
@@ -1394,7 +1394,7 @@
       const y = topY + u * height;
       const half = lerp(0.04, 0.28, u);
 
-      const count = Math.floor(50 + 80*u); // Reduced for performance
+      const count = Math.floor(90 + 150*u);
       for (let i=0; i<count; i++){
         const v = Math.random();
         const x = cx + (rand(1,-1) * half * (0.15 + 0.85*Math.pow(v, 0.55)));
@@ -1420,11 +1420,11 @@
       }
     }
 
-    // Garlands - reduced for performance
+    // Garlands
     const garlands = 2;
     for (let g=0; g<garlands; g++){
       const turns = 4.2 + g*0.6;
-      for (let i=0; i<120; i++){
+      for (let i=0; i<220; i++){
         const u = i/219;
         const y = topY + u * height;
         const half = lerp(0.02, 0.27, u);
