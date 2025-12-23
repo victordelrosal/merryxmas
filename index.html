@@ -1047,6 +1047,32 @@
         transform: scale(1) translateY(0);
       }
     }
+    /* Instant tooltip */
+    .leaderboard-entry {
+      position: relative;
+    }
+    .leaderboard-entry::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 6px);
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      padding: 4px 8px;
+      background: rgba(0,0,0,0.85);
+      color: rgba(255,255,255,0.95);
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.05s ease, transform 0.1s ease;
+      z-index: 100;
+    }
+    .leaderboard-entry:hover::after {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
     :fullscreen .visitor-leaderboard,
     :-webkit-full-screen .visitor-leaderboard {
       opacity: 0 !important;
@@ -2615,7 +2641,7 @@
 
           entry.appendChild(flag);
           entry.appendChild(countEl);
-          entry.title = `${countryName(code)} (${count} visits)`;
+          entry.dataset.tooltip = `${countryName(code)} (${count})`;
           leaderboard.appendChild(entry);
         });
 
