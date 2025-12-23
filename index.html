@@ -993,7 +993,7 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
     }
     .visitor-leaderboard.visible {
-      opacity: 1;
+      opacity: 0.75;
     }
     .visitor-leaderboard:empty {
       display: none;
@@ -1001,8 +1001,8 @@
     .leaderboard-entry {
       display: flex;
       align-items: center;
-      gap: 4px;
-      padding: 4px 10px 4px 6px;
+      gap: 3px;
+      padding: 3px 8px 3px 5px;
       background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
@@ -1029,16 +1029,16 @@
       border-color: rgba(205,127,50,0.25);
     }
     .entry-flag {
-      font-size: 22px;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      font-size: 16px;
+      filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
     }
     .entry-count {
       font-family: system-ui, -apple-system, sans-serif;
-      font-size: 13px;
+      font-size: 11px;
       font-weight: 600;
-      color: rgba(255,255,255,0.85);
-      text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-      min-width: 20px;
+      color: rgba(255,255,255,0.8);
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      min-width: 16px;
       text-align: center;
     }
     @keyframes entryPop {
@@ -2535,6 +2535,32 @@
     return String.fromCodePoint(...codePoints);
   }
 
+  // Country code to name
+  const countryNames = {
+    AF:'Afghanistan',AL:'Albania',DZ:'Algeria',AD:'Andorra',AO:'Angola',AR:'Argentina',
+    AM:'Armenia',AU:'Australia',AT:'Austria',AZ:'Azerbaijan',BS:'Bahamas',BH:'Bahrain',
+    BD:'Bangladesh',BB:'Barbados',BY:'Belarus',BE:'Belgium',BZ:'Belize',BJ:'Benin',
+    BT:'Bhutan',BO:'Bolivia',BA:'Bosnia',BW:'Botswana',BR:'Brazil',BN:'Brunei',
+    BG:'Bulgaria',KH:'Cambodia',CM:'Cameroon',CA:'Canada',CL:'Chile',CN:'China',
+    CO:'Colombia',CR:'Costa Rica',HR:'Croatia',CU:'Cuba',CY:'Cyprus',CZ:'Czechia',
+    DK:'Denmark',DO:'Dominican Republic',EC:'Ecuador',EG:'Egypt',SV:'El Salvador',
+    EE:'Estonia',ET:'Ethiopia',FI:'Finland',FR:'France',GE:'Georgia',DE:'Germany',
+    GH:'Ghana',GR:'Greece',GT:'Guatemala',HN:'Honduras',HK:'Hong Kong',HU:'Hungary',
+    IS:'Iceland',IN:'India',ID:'Indonesia',IR:'Iran',IQ:'Iraq',IE:'Ireland',IL:'Israel',
+    IT:'Italy',JM:'Jamaica',JP:'Japan',JO:'Jordan',KZ:'Kazakhstan',KE:'Kenya',KR:'South Korea',
+    KW:'Kuwait',LV:'Latvia',LB:'Lebanon',LT:'Lithuania',LU:'Luxembourg',MY:'Malaysia',
+    MX:'Mexico',MA:'Morocco',NL:'Netherlands',NZ:'New Zealand',NG:'Nigeria',NO:'Norway',
+    PK:'Pakistan',PA:'Panama',PY:'Paraguay',PE:'Peru',PH:'Philippines',PL:'Poland',
+    PT:'Portugal',PR:'Puerto Rico',QA:'Qatar',RO:'Romania',RU:'Russia',SA:'Saudi Arabia',
+    RS:'Serbia',SG:'Singapore',SK:'Slovakia',SI:'Slovenia',ZA:'South Africa',ES:'Spain',
+    LK:'Sri Lanka',SE:'Sweden',CH:'Switzerland',TW:'Taiwan',TH:'Thailand',TR:'Turkey',
+    UA:'Ukraine',AE:'UAE',GB:'United Kingdom',US:'United States',UY:'Uruguay',VE:'Venezuela',
+    VN:'Vietnam',ZW:'Zimbabwe'
+  };
+  function countryName(code) {
+    return countryNames[code?.toUpperCase()] || code;
+  }
+
   // Register visit and increment counter
   async function registerVisit() {
     try {
@@ -2589,7 +2615,7 @@
 
           entry.appendChild(flag);
           entry.appendChild(countEl);
-          entry.title = `${code}: ${count} visits`;
+          entry.title = `${countryName(code)} (${count} visits)`;
           leaderboard.appendChild(entry);
         });
 
