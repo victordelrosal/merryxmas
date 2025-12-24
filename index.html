@@ -85,19 +85,22 @@
     .city-label {
       position: fixed;
       bottom: 80px;
-      left: 20px;
+      left: 60px;
       font: 500 12px/1 system-ui, -apple-system, sans-serif;
       color: rgba(255,255,255,0.4);
       text-shadow: 0 1px 4px rgba(0,0,0,0.5);
       z-index: 2;
       opacity: 0;
       transform: translateY(10px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.8s ease, transform 0.8s ease, left 0.6s cubic-bezier(0.32, 0.72, 0, 1);
       pointer-events: none;
     }
     .city-label.visible {
       opacity: 1;
       transform: translateY(0);
+    }
+    .city-label.sidebar-open {
+      left: 240px;
     }
     .hint {
       position: fixed; left: 18px; bottom: 14px;
@@ -2555,11 +2558,14 @@
   const sidebar = document.getElementById('sidebar');
   const sidebarToggle = document.getElementById('sidebarToggle');
   const musicbarEl = document.getElementById('musicbar');
+  const cityLabelEl = document.getElementById('cityLabel');
 
   function toggleSidebar() {
     sidebar.classList.toggle('expanded');
-    // Sync musicbar position with sidebar state
-    musicbarEl.classList.toggle('sidebar-open', sidebar.classList.contains('expanded'));
+    const isExpanded = sidebar.classList.contains('expanded');
+    // Sync musicbar and city label position with sidebar state
+    musicbarEl.classList.toggle('sidebar-open', isExpanded);
+    cityLabelEl.classList.toggle('sidebar-open', isExpanded);
   }
 
   sidebarToggle.addEventListener('click', toggleSidebar);
