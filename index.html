@@ -46,12 +46,16 @@
       overflow: hidden;
       pointer-events: none;
     }
+    @keyframes cityBreathe {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
     .city-bg {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: -4%;
+      left: -4%;
+      width: 108%;
+      height: 108%;
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
@@ -62,6 +66,7 @@
     }
     .city-bg.active {
       opacity: 0.45;
+      animation: cityBreathe 12s ease-in-out infinite;
     }
     .city-bg::after {
       content: '';
