@@ -102,6 +102,42 @@
     .city-label.sidebar-open {
       left: 240px;
     }
+    .city-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50%;
+      color: rgba(255,255,255,0.5);
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 80;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      user-select: none;
+    }
+    .city-nav:hover {
+      background: rgba(0,0,0,0.5);
+      color: rgba(255,255,255,0.9);
+      border-color: rgba(255,255,255,0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+    .city-nav:active {
+      transform: translateY(-50%) scale(0.95);
+    }
+    .city-nav-prev {
+      left: 20px;
+    }
+    .city-nav-next {
+      right: 20px;
+    }
     .hint {
       position: fixed; left: 18px; bottom: 14px;
       font: 12px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Arial;
@@ -1561,6 +1597,8 @@
   <div class="city-bg" id="cityBg2"></div>
 </div>
 <div class="city-label" id="cityLabel"></div>
+<div class="city-nav city-nav-prev" id="cityPrev">‹</div>
+<div class="city-nav city-nav-next" id="cityNext">›</div>
 <canvas id="c"></canvas>
 <div class="visitor-leaderboard" id="visitorLeaderboard"></div>
 <div class="snow-container" id="snow"></div>
@@ -3707,6 +3745,15 @@
     currentCityIndex = (currentCityIndex + 1) % worldCapitals.length;
     showCity(currentCityIndex);
   }
+
+  function prevCity() {
+    currentCityIndex = (currentCityIndex - 1 + worldCapitals.length) % worldCapitals.length;
+    showCity(currentCityIndex);
+  }
+
+  // City navigation buttons
+  document.getElementById('cityPrev').addEventListener('click', prevCity);
+  document.getElementById('cityNext').addEventListener('click', nextCity);
 
   // Calculate distance between two points using Haversine formula
   function getDistance(lat1, lng1, lat2, lng2) {
