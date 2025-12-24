@@ -1246,6 +1246,171 @@
       opacity: 0 !important;
       pointer-events: none !important;
     }
+
+    /* ==================== MOBILE STYLES ==================== */
+    @media screen and (max-width: 768px) {
+      /* Hide sidebar completely on mobile */
+      .sidebar {
+        display: none !important;
+      }
+
+      /* Remove sidebar margin from musicbar */
+      .musicbar.sidebar-open .musicbar-left {
+        margin-left: 0;
+      }
+
+      /* Visitor leaderboard - mobile optimized */
+      .visitor-leaderboard {
+        top: 12px;
+        padding: 8px 12px;
+        gap: 6px;
+        max-width: 92%;
+        border-radius: 20px;
+      }
+      .leaderboard-entry {
+        padding: 2px 6px 2px 4px;
+        gap: 2px;
+        border-radius: 12px;
+      }
+      .entry-flag {
+        font-size: 14px;
+      }
+      .entry-count {
+        font-size: 10px;
+      }
+      /* Disable hover tooltip on mobile (use tap instead) */
+      .leaderboard-entry::after {
+        display: none;
+      }
+
+      /* From signature - mobile proportions */
+      .from-container {
+        bottom: 15%;
+        width: 90%;
+        min-width: unset;
+        padding: 0 12px;
+      }
+      .from-wrapper {
+        font-size: clamp(24px, 6vw, 36px);
+        gap: 0.15em;
+      }
+      .from-name {
+        font-size: clamp(28px, 7vw, 44px);
+        min-width: 80px;
+        padding: 3px 8px;
+      }
+
+      /* Musicbar - simplified mobile version */
+      .musicbar {
+        padding: 6px 12px;
+        gap: 4px;
+      }
+      .musicbar-progress {
+        height: 3px;
+      }
+      .musicbar-progress:hover {
+        height: 3px;
+      }
+      .musicbar-controls {
+        gap: 8px;
+      }
+      .musicbar-left {
+        gap: 8px;
+        margin-left: 0 !important;
+      }
+      .musicbar-play-btn {
+        width: 32px;
+        height: 32px;
+      }
+      .musicbar-skip-btn {
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+      }
+      .musicbar-time {
+        font-size: 10px;
+        min-width: 60px;
+      }
+      .musicbar-center {
+        flex: 1;
+        min-width: 0;
+      }
+      .musicbar-track-info {
+        padding: 4px 8px;
+      }
+      .musicbar-track-name {
+        font-size: 11px;
+        max-width: 100px;
+      }
+      .musicbar-right {
+        gap: 4px;
+      }
+      .musicbar-icon-btn {
+        width: 28px;
+        height: 28px;
+        padding: 5px;
+      }
+      .musicbar-tracklist {
+        bottom: calc(100% + 6px);
+        right: 8px;
+        max-width: calc(100vw - 16px);
+        max-height: 50vh;
+      }
+
+      /* Hide hint on mobile */
+      .hint {
+        display: none;
+      }
+
+      /* Random button - mobile position */
+      .random-btn {
+        right: 12px;
+        bottom: 80px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
+    }
+
+    /* Extra small screens (phones in portrait) */
+    @media screen and (max-width: 480px) {
+      .visitor-leaderboard {
+        top: 8px;
+        padding: 6px 10px;
+        gap: 4px;
+      }
+      .leaderboard-entry {
+        padding: 2px 5px 2px 3px;
+      }
+      .entry-flag {
+        font-size: 12px;
+      }
+      .entry-count {
+        font-size: 9px;
+        min-width: 14px;
+      }
+
+      .from-container {
+        bottom: 18%;
+      }
+      .from-wrapper {
+        font-size: clamp(20px, 5.5vw, 30px);
+      }
+      .from-name {
+        font-size: clamp(24px, 6.5vw, 36px);
+        min-width: 60px;
+      }
+
+      .musicbar-time {
+        display: none;
+      }
+      .musicbar-track-name {
+        max-width: 80px;
+      }
+      .musicbar-skip-btn {
+        display: none;
+      }
+    }
   </style>
 
   <!-- Firebase SDK -->
