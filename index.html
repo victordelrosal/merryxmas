@@ -670,9 +670,12 @@
         0 2px 4px rgba(0,0,0,0.2);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      transform: translateY(-8px);
+      /* Center in musicbar */
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) translateY(-8px);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
-      position: relative;
       z-index: 10;
     }
     .musicbar-play-btn::before {
@@ -690,7 +693,7 @@
       border-radius: 50%;
     }
     .musicbar-play-btn:hover {
-      transform: translateY(-10px) scale(1.08);
+      transform: translate(-50%, -50%) translateY(-10px) scale(1.08);
       box-shadow:
         0 0 30px rgba(255,100,100,0.5),
         inset 0 2px 4px rgba(255,255,255,0.5),
@@ -699,7 +702,7 @@
         0 2px 4px rgba(0,0,0,0.2);
     }
     .musicbar-play-btn:active {
-      transform: translateY(-4px) scale(0.98);
+      transform: translate(-50%, -50%) translateY(-4px) scale(0.98);
     }
     .musicbar-play-btn svg {
       width: 24px;
@@ -1371,10 +1374,10 @@
       .musicbar-play-btn {
         width: 44px;
         height: 44px;
-        transform: translateY(-6px);
+        transform: translate(-50%, -50%) translateY(-6px);
       }
       .musicbar-play-btn:hover {
-        transform: translateY(-8px) scale(1.05);
+        transform: translate(-50%, -50%) translateY(-8px) scale(1.05);
       }
       .musicbar-play-btn svg {
         width: 20px;
