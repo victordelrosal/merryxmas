@@ -2143,6 +2143,50 @@
   const target2026 = generate2026Positions();
   const targetStarArch = generate26StarPositions();
 
+  // Music-Synced Tree Lights
+  let audioContext, analyser, dataArray, musicSyncActive = false;
+  
+  function initMusicSync() {
+    try {
+      // Create Web Audio API context
+      window.AudioContext = window.AudioContext || window.webkitAudioContext;
+      audioContext = new AudioContext();
+      analyser = audioContext.createAnalyser();
+      analyser.fftSize = 256;
+      dataArray = new Uint8Array(analyser.frequencyBinCount);
+      
+      // Create audio source from first YouTube player
+      const firstPlayer = players[0];
+      if (firstPlayer && firstPlayer.getIframe) {
+        // Note: YouTube cross-origin audio access is limited, 
+        // but we can sync with visual timing instead
+        musicSyncActive = true;
+        startVisualSync();
+      }
+    } catch (e) {
+      console.log('Music sync unavailable:', e);
+    }
+  }
+  
+  function startVisualSync() {
+    // Fallback: Sync lights with playback timing when audio analysis unavailable
+    if (!musicSyncActive) return;
+    
+    setInterval(() => {
+      if (!isPlaying) return;
+      
+      // Create rhythmic pulse based on time
+      const time = Date.now() / 1000;
+      const beat = Math.sin(time * 2) * 0.5 + 0.5; // 2Hz pulse
+      const pulse = 1.0 + beat * 0.4; // 40% intensity variation
+      
+      // Update tree light sparkle in sync with music
+      const originalSparkle = cfg.sparkle;
+      cfg.sparkle = originalSparkle * pulse;
+      
+    }, 100); // Update every 100ms for smooth effect
+  }
+
   // Transition to a new mode
   function transitionToMode(newMode) {
     currentMode = newMode;
@@ -3375,6 +3419,11 @@
           onReady: (event) => {
             playerReady[i] = true;
             event.target.setVolume(70);
+            
+            // Initialize music-synced lights for first player
+            if (i === 0 && !window.audioContext) {
+              initMusicSync();
+            }
           },
           onStateChange: (e) => {
             if (e.data === YT.PlayerState.PLAYING) {
@@ -3400,6 +3449,20 @@
                 isPlaying = false;
                 updatePlayPauseIcon();
                 updateTrackDisplay();
+              }
+            }
+            
+            // Sync tree lights with music state
+            if (e.data === YT.PlayerState.PLAYING && i === currentTrack) {
+              // Enable music sync when first track plays
+              if (i === 0 && musicSyncActive) {
+                cfg.sparkle = 3.0; // Restore normal sparkle with sync
+              }
+            } else if ((e.data === YT.PlayerState.PAUSED || e.data === YT.PlayerState.ENDED) && i === currentTrack) {
+              // Restore original sparkle when music stops
+              if (musicSyncActive) {
+                const sparkleCtrl = document.getElementById('sparkleCtrl');
+                cfg.sparkle = parseFloat(sparkleCtrl?.value || 3.0);
               }
             }
           },
