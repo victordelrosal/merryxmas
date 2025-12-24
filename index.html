@@ -627,17 +627,20 @@
     .musicbar-controls {
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: space-between;
+      width: 100%;
+      position: relative;
     }
     .musicbar-left {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin-left: 0;
+      margin-left: 16px;
       transition: margin-left 0.6s cubic-bezier(0.32, 0.72, 0, 1);
+      z-index: 5;
     }
     .musicbar.sidebar-open .musicbar-left {
-      margin-left: 220px;
+      margin-left: 236px;
     }
     .musicbar-play-btn {
       width: 48px;
@@ -670,13 +673,12 @@
         0 2px 4px rgba(0,0,0,0.2);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      /* Center in musicbar */
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) translateY(-8px);
+      /* Floating above the bar */
+      position: relative;
+      transform: translateY(-8px);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
       z-index: 10;
+      flex-shrink: 0;
     }
     .musicbar-play-btn::before {
       content: '';
@@ -693,7 +695,7 @@
       border-radius: 50%;
     }
     .musicbar-play-btn:hover {
-      transform: translate(-50%, -50%) translateY(-10px) scale(1.08);
+      transform: translateY(-10px) scale(1.08);
       box-shadow:
         0 0 30px rgba(255,100,100,0.5),
         inset 0 2px 4px rgba(255,255,255,0.5),
@@ -702,7 +704,7 @@
         0 2px 4px rgba(0,0,0,0.2);
     }
     .musicbar-play-btn:active {
-      transform: translate(-50%, -50%) translateY(-4px) scale(0.98);
+      transform: translateY(-4px) scale(0.98);
     }
     .musicbar-play-btn svg {
       width: 24px;
@@ -743,11 +745,13 @@
       color: rgba(255,255,255,0.9);
     }
     .musicbar-center {
-      flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 0;
+      gap: 12px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
     }
     .musicbar-track-info {
       display: flex;
@@ -787,6 +791,8 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      margin-right: 16px;
+      z-index: 5;
     }
     .musicbar-icon-btn {
       width: 32px;
@@ -1365,6 +1371,7 @@
         height: 3px;
       }
       .musicbar-controls {
+        justify-content: center;
         gap: 8px;
       }
       .musicbar-left {
@@ -1374,10 +1381,10 @@
       .musicbar-play-btn {
         width: 44px;
         height: 44px;
-        transform: translate(-50%, -50%) translateY(-6px);
+        transform: translateY(-6px);
       }
       .musicbar-play-btn:hover {
-        transform: translate(-50%, -50%) translateY(-8px) scale(1.05);
+        transform: translateY(-8px) scale(1.05);
       }
       .musicbar-play-btn svg {
         width: 20px;
@@ -1393,8 +1400,9 @@
         min-width: 60px;
       }
       .musicbar-center {
-        flex: 1;
-        min-width: 0;
+        position: static;
+        transform: none;
+        gap: 8px;
       }
       .musicbar-track-info {
         padding: 4px 8px;
@@ -1625,6 +1633,12 @@
   </div>
   <div class="musicbar-controls">
     <div class="musicbar-left">
+      <div class="musicbar-track-info" id="trackInfo">
+        <span class="musicbar-track-name" id="currentTrackName">Select a track</span>
+        <svg class="musicbar-track-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+      </div>
+    </div>
+    <div class="musicbar-center">
       <button class="musicbar-skip-btn" id="prevTrack" title="Previous">
         <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
       </button>
@@ -1637,12 +1651,6 @@
       </button>
       <div class="musicbar-time">
         <span class="musicbar-time-current" id="currentTime">0:00</span> / <span id="totalTime">0:00</span>
-      </div>
-    </div>
-    <div class="musicbar-center">
-      <div class="musicbar-track-info" id="trackInfo">
-        <span class="musicbar-track-name" id="currentTrackName">Select a track</span>
-        <svg class="musicbar-track-chevron" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
       </div>
     </div>
     <div class="musicbar-right">
