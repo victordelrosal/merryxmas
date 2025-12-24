@@ -1648,6 +1648,16 @@
       </div>
     </div>
 
+    <!-- City Background Transparency -->
+    <div class="control-group">
+      <div class="control-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      </div>
+      <div class="control-content">
+        <button class="control-btn active" id="toggleCityBg">City: 45%</button>
+      </div>
+    </div>
+
     <!-- Fullscreen -->
     <div class="control-group">
       <div class="control-icon">
@@ -2626,6 +2636,35 @@
 
   // Set initial button text
   updateImageOverlay();
+
+  // City background transparency toggle
+  const toggleCityBgBtn = document.getElementById('toggleCityBg');
+  const cityOpacityLevels = [0, 0.25, 0.45, 0.65, 0.85, 1];
+  const cityOpacityLabels = ['0%', '25%', '45%', '65%', '85%', '100%'];
+  let currentCityOpacityIndex = 2; // Start at 45%
+
+  function updateCityOpacity() {
+    const opacity = cityOpacityLevels[currentCityOpacityIndex];
+    // Update CSS custom property for city background opacity
+    document.querySelectorAll('.city-bg').forEach(bg => {
+      if (bg.classList.contains('active')) {
+        bg.style.opacity = opacity;
+      }
+    });
+    // Store the current opacity for new cities
+    window.cityBgOpacity = opacity;
+
+    toggleCityBgBtn.textContent = `City: ${cityOpacityLabels[currentCityOpacityIndex]}`;
+    toggleCityBgBtn.classList.toggle('active', opacity > 0);
+  }
+
+  toggleCityBgBtn.addEventListener('click', () => {
+    currentCityOpacityIndex = (currentCityOpacityIndex + 1) % cityOpacityLevels.length;
+    updateCityOpacity();
+  });
+
+  // Initialize
+  window.cityBgOpacity = cityOpacityLevels[currentCityOpacityIndex];
 
   // Fullscreen toggle
   const toggleFullscreenBtn = document.getElementById('toggleFullscreen');
@@ -3643,10 +3682,13 @@
     // Set new background
     incomingBg.style.backgroundImage = `url('${city.url}')`;
 
-    // Crossfade
+    // Crossfade with user's chosen opacity
     setTimeout(() => {
+      const opacity = window.cityBgOpacity !== undefined ? window.cityBgOpacity : 0.45;
       incomingBg.classList.add('active');
+      incomingBg.style.opacity = opacity;
       outgoingBg.classList.remove('active');
+      outgoingBg.style.opacity = 0;
 
       // Update label
       cityLabel.textContent = `📍 ${city.city}, ${city.country}`;
