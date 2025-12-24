@@ -1835,76 +1835,80 @@
   function generate2026Positions() {
     const positions = [];
     const digits = ['2', '0', '2', '6'];
-    const digitWidth = 0.16; // FATTER digits
-    const strokeWidth = 0.025; // Thickness of strokes
-    const spacing = 0.05;
+    const digitWidth = 0.18; // EXTRA FAT digits
+    const strokeThickness = 0.035; // Thick strokes
+    const spacing = 0.045;
     const totalWidth = digits.length * digitWidth + (digits.length - 1) * spacing;
     const startX = 0.5 - totalWidth / 2;
     const centerY = 0.5;
-    const digitHeight = 0.40; // Taller too
+    const digitHeight = 0.45; // Taller
 
-    digits.forEach((digit, di) => {
-      const baseX = startX + di * (digitWidth + spacing);
-      const pointsPerDigit = 120; // More points for density
-
-      // Multiple stroke passes for thickness
-      for (let stroke = 0; stroke < 3; stroke++) {
-        const offsetX = (stroke - 1) * strokeWidth * 0.4;
-        const offsetY = (stroke - 1) * strokeWidth * 0.3;
-
-        for (let i = 0; i < pointsPerDigit; i++) {
-          const u = i / pointsPerDigit;
-          let x, y;
-
-          if (digit === '2') {
-            // Draw "2" shape - top bar, down right, middle bar, down left, bottom bar
-            if (u < 0.18) {
-              x = baseX + u * 5.56 * digitWidth;
-              y = centerY - digitHeight/2;
-            } else if (u < 0.32) {
-              x = baseX + digitWidth;
-              y = centerY - digitHeight/2 + (u - 0.18) * 3.57 * digitHeight/2;
-            } else if (u < 0.50) {
-              x = baseX + digitWidth - (u - 0.32) * 5.56 * digitWidth;
-              y = centerY;
-            } else if (u < 0.68) {
-              x = baseX;
-              y = centerY + (u - 0.50) * 2.78 * digitHeight/2;
-            } else {
-              x = baseX + (u - 0.68) * 3.125 * digitWidth;
-              y = centerY + digitHeight/2;
-            }
-          } else if (digit === '0') {
-            // Draw "0" as ellipse
-            const angle = u * Math.PI * 2;
-            x = baseX + digitWidth/2 + Math.cos(angle) * digitWidth/2;
-            y = centerY + Math.sin(angle) * digitHeight/2;
-          } else if (digit === '6') {
-            // Draw "6" shape - top bar, down left, bottom bar, up right, middle bar
-            if (u < 0.12) {
-              x = baseX + digitWidth - u * 8.33 * digitWidth;
-              y = centerY - digitHeight/2;
-            } else if (u < 0.38) {
-              x = baseX;
-              y = centerY - digitHeight/2 + (u - 0.12) * 3.85 * digitHeight;
-            } else if (u < 0.56) {
-              x = baseX + (u - 0.38) * 5.56 * digitWidth;
-              y = centerY + digitHeight/2;
-            } else if (u < 0.74) {
-              x = baseX + digitWidth;
-              y = centerY + digitHeight/2 - (u - 0.56) * 2.78 * digitHeight/2;
-            } else {
-              x = baseX + digitWidth - (u - 0.74) * 3.85 * digitWidth;
-              y = centerY;
-            }
-          }
-
-          // Add position with stroke offset and random scatter for thickness
+    // Helper to add thick stroke points
+    function addStrokePoints(x1, y1, x2, y2, numPoints) {
+      for (let i = 0; i <= numPoints; i++) {
+        const t = i / numPoints;
+        const x = x1 + (x2 - x1) * t;
+        const y = y1 + (y2 - y1) * t;
+        // Fill thickness with multiple particles
+        for (let j = 0; j < 5; j++) {
           positions.push({
-            x: x + offsetX + (Math.random() - 0.5) * strokeWidth,
-            y: y + offsetY + (Math.random() - 0.5) * strokeWidth
+            x: x + (Math.random() - 0.5) * strokeThickness,
+            y: y + (Math.random() - 0.5) * strokeThickness
           });
         }
+      }
+    }
+
+    // Helper to add arc points
+    function addArcPoints(cx, cy, rx, ry, startAngle, endAngle, numPoints) {
+      for (let i = 0; i <= numPoints; i++) {
+        const t = i / numPoints;
+        const angle = startAngle + (endAngle - startAngle) * t;
+        const x = cx + Math.cos(angle) * rx;
+        const y = cy + Math.sin(angle) * ry;
+        for (let j = 0; j < 5; j++) {
+          positions.push({
+            x: x + (Math.random() - 0.5) * strokeThickness,
+            y: y + (Math.random() - 0.5) * strokeThickness
+          });
+        }
+      }
+    }
+
+    digits.forEach((digit, di) => {
+      const bx = startX + di * (digitWidth + spacing); // base X
+      const top = centerY - digitHeight / 2;
+      const mid = centerY;
+      const bot = centerY + digitHeight / 2;
+      const left = bx;
+      const right = bx + digitWidth;
+      const cx = bx + digitWidth / 2;
+
+      if (digit === '2') {
+        // Top horizontal bar
+        addStrokePoints(left, top, right, top, 25);
+        // Right side going down to middle
+        addStrokePoints(right, top, right, mid, 20);
+        // Middle horizontal bar
+        addStrokePoints(right, mid, left, mid, 25);
+        // Left side going down to bottom
+        addStrokePoints(left, mid, left, bot, 20);
+        // Bottom horizontal bar
+        addStrokePoints(left, bot, right, bot, 25);
+      } else if (digit === '0') {
+        // Full ellipse
+        addArcPoints(cx, centerY, digitWidth / 2, digitHeight / 2, 0, Math.PI * 2, 60);
+      } else if (digit === '6') {
+        // Top horizontal bar
+        addStrokePoints(right, top, left, top, 25);
+        // Left side full height
+        addStrokePoints(left, top, left, bot, 35);
+        // Bottom horizontal bar
+        addStrokePoints(left, bot, right, bot, 25);
+        // Right side from bottom to middle
+        addStrokePoints(right, bot, right, mid, 20);
+        // Middle horizontal bar
+        addStrokePoints(right, mid, left, mid, 25);
       }
     });
 
