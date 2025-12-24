@@ -3645,6 +3645,12 @@
             entry.style.cursor = 'pointer';
           });
 
+          // Click to navigate to cities from this country
+          entry.dataset.countryCode = code;
+          entry.addEventListener('click', () => {
+            navigateToCitiesFromCountry(code);
+          });
+
           leaderboard.appendChild(entry);
         });
 
@@ -3683,14 +3689,14 @@
     { city: 'Nairobi', country: 'Kenya', lat: -1.2921, lng: 36.8219, url: 'https://images.unsplash.com/photo-1611348524140-53c9a25263d6?w=1920&q=80' },
     { city: 'Sydney', country: 'Australia', lat: -33.8688, lng: 151.2093, url: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=1920&q=80' },
     { city: 'Buenos Aires', country: 'Argentina', lat: -34.6037, lng: -58.3816, url: 'https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=1920&q=80' },
-    { city: 'Córdoba', country: 'Argentina', lat: -31.4201, lng: -64.1888, url: 'https://images.unsplash.com/photo-1599413987323-b2b8c0d7d9c8?w=1920&q=80' },
+    { city: 'Córdoba', country: 'Argentina', lat: -31.4201, lng: -64.1888, url: 'https://images.unsplash.com/photo-1582651957695-2c6c8466cdda?w=1920&q=80' },
     { city: 'Mendoza', country: 'Argentina', lat: -32.8895, lng: -68.8458, url: 'https://images.unsplash.com/photo-1510971837540-83a95ca18268?w=1920&q=80' },
     { city: 'Rio de Janeiro', country: 'Brazil', lat: -22.9068, lng: -43.1729, url: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1920&q=80' },
     { city: 'Toronto', country: 'Canada', lat: 43.6532, lng: -79.3832, url: 'https://images.unsplash.com/photo-1517090504586-fde19ea6066f?w=1920&q=80' },
     { city: 'Copenhagen', country: 'Denmark', lat: 55.6761, lng: 12.5683, url: 'https://images.unsplash.com/photo-1513622470522-26c3c8a854bc?w=1920&q=80' },
     { city: 'Colima', country: 'Colima, Mexico', lat: 19.2433, lng: -103.7250, url: 'img/Colima.webp' },
     { city: 'Monterrey', country: 'N.L., Mexico', lat: 25.6866, lng: -100.3161, url: 'https://images.unsplash.com/photo-1585975776687-3b8a5d1f1e63?w=1920&q=80' },
-    { city: 'Guadalajara', country: 'Jalisco, Mexico', lat: 20.6597, lng: -103.3496, url: 'https://images.unsplash.com/photo-1558237769-be43a68fa653?w=1920&q=80' },
+    { city: 'Guadalajara', country: 'Jalisco, Mexico', lat: 20.6597, lng: -103.3496, url: 'https://images.unsplash.com/photo-1512813195386-6cf811ad3542?w=1920&q=80' },
     { city: 'Galway', country: 'Ireland', lat: 53.2707, lng: -9.0568, url: 'https://images.unsplash.com/photo-1564959130747-897fb406b9af?w=1920&q=80' },
     { city: 'Newport', country: 'Co Mayo, Ireland', lat: 53.8847, lng: -9.5456, url: 'https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQ4_U54Jw_pkXkJkPiRWnpSN_kYGIWOD6Hh0rX6DR33rQrWQ-p8cyOyFOGascb_vhmsRpuMv1TRBjWvk9S9RTmSqyA&s=19' },
     { city: 'Newport Bridge', country: 'Co Mayo, Ireland', lat: 53.8847, lng: -9.5456, url: 'https://media-cdn.tripadvisor.com/media/photo-s/1c/f5/08/d7/newport-bridge.jpg' },
@@ -3762,6 +3768,108 @@
   // City navigation buttons
   document.getElementById('cityPrev').addEventListener('click', prevCity);
   document.getElementById('cityNext').addEventListener('click', nextCity);
+
+  // Map ISO country codes to worldCapitals country names
+  const countryCodeToName = {
+    'IE': 'Ireland', 'MX': 'Mexico', 'AR': 'Argentina', 'CA': 'Canada',
+    'GB': 'UK', 'US': 'USA', 'FR': 'France', 'DE': 'Germany', 'IT': 'Italy',
+    'ES': 'Spain', 'NL': 'Netherlands', 'AT': 'Austria', 'RU': 'Russia',
+    'SG': 'Singapore', 'JP': 'Japan', 'CN': 'China', 'KR': 'South Korea',
+    'TH': 'Thailand', 'IN': 'India', 'AE': 'UAE', 'EG': 'Egypt',
+    'ZA': 'South Africa', 'KE': 'Kenya', 'AU': 'Australia', 'BR': 'Brazil',
+    'DK': 'Denmark', 'NO': 'Norway', 'SE': 'Sweden', 'FI': 'Finland',
+    'PL': 'Poland', 'PT': 'Portugal', 'GR': 'Greece', 'CH': 'Switzerland',
+    'BE': 'Belgium', 'CZ': 'Czech Republic', 'HU': 'Hungary', 'TR': 'Turkey',
+    'IL': 'Israel', 'SA': 'Saudi Arabia', 'PH': 'Philippines', 'MY': 'Malaysia',
+    'ID': 'Indonesia', 'VN': 'Vietnam', 'NZ': 'New Zealand', 'CL': 'Chile',
+    'CO': 'Colombia', 'PE': 'Peru', 'VE': 'Venezuela', 'EC': 'Ecuador',
+    'UY': 'Uruguay', 'PY': 'Paraguay', 'BO': 'Bolivia', 'CR': 'Costa Rica',
+    'PA': 'Panama', 'GT': 'Guatemala', 'CU': 'Cuba', 'DO': 'Dominican Republic',
+    'PR': 'Puerto Rico', 'JM': 'Jamaica', 'HK': 'Hong Kong', 'TW': 'Taiwan',
+    'PK': 'Pakistan', 'BD': 'Bangladesh', 'LK': 'Sri Lanka', 'NP': 'Nepal',
+    'UA': 'Ukraine', 'RO': 'Romania', 'BG': 'Bulgaria', 'HR': 'Croatia',
+    'RS': 'Serbia', 'SK': 'Slovakia', 'SI': 'Slovenia'
+  };
+
+  // Approximate country center coordinates for fallback distance calculation
+  const countryCoordinates = {
+    'IE': { lat: 53.1424, lng: -7.6921 }, 'MX': { lat: 23.6345, lng: -102.5528 },
+    'AR': { lat: -38.4161, lng: -63.6167 }, 'CA': { lat: 56.1304, lng: -106.3468 },
+    'GB': { lat: 55.3781, lng: -3.4360 }, 'US': { lat: 37.0902, lng: -95.7129 },
+    'FR': { lat: 46.2276, lng: 2.2137 }, 'DE': { lat: 51.1657, lng: 10.4515 },
+    'IT': { lat: 41.8719, lng: 12.5674 }, 'ES': { lat: 40.4637, lng: -3.7492 },
+    'NL': { lat: 52.1326, lng: 5.2913 }, 'AT': { lat: 47.5162, lng: 14.5501 },
+    'RU': { lat: 61.5240, lng: 105.3188 }, 'SG': { lat: 1.3521, lng: 103.8198 },
+    'JP': { lat: 36.2048, lng: 138.2529 }, 'CN': { lat: 35.8617, lng: 104.1954 },
+    'KR': { lat: 35.9078, lng: 127.7669 }, 'TH': { lat: 15.8700, lng: 100.9925 },
+    'IN': { lat: 20.5937, lng: 78.9629 }, 'AE': { lat: 23.4241, lng: 53.8478 },
+    'EG': { lat: 26.8206, lng: 30.8025 }, 'ZA': { lat: -30.5595, lng: 22.9375 },
+    'KE': { lat: -0.0236, lng: 37.9062 }, 'AU': { lat: -25.2744, lng: 133.7751 },
+    'BR': { lat: -14.2350, lng: -51.9253 }, 'DK': { lat: 56.2639, lng: 9.5018 },
+    'NO': { lat: 60.4720, lng: 8.4689 }, 'SE': { lat: 60.1282, lng: 18.6435 },
+    'FI': { lat: 61.9241, lng: 25.7482 }, 'PL': { lat: 51.9194, lng: 19.1451 },
+    'PT': { lat: 39.3999, lng: -8.2245 }, 'GR': { lat: 39.0742, lng: 21.8243 },
+    'CH': { lat: 46.8182, lng: 8.2275 }, 'BE': { lat: 50.5039, lng: 4.4699 },
+    'CO': { lat: 4.5709, lng: -74.2973 }, 'CL': { lat: -35.6751, lng: -71.5430 },
+    'PE': { lat: -9.1900, lng: -75.0152 }, 'VE': { lat: 6.4238, lng: -66.5897 },
+    'TR': { lat: 38.9637, lng: 35.2433 }, 'IL': { lat: 31.0461, lng: 34.8516 },
+    'SA': { lat: 23.8859, lng: 45.0792 }, 'PH': { lat: 12.8797, lng: 121.7740 },
+    'MY': { lat: 4.2105, lng: 101.9758 }, 'ID': { lat: -0.7893, lng: 113.9213 },
+    'VN': { lat: 14.0583, lng: 108.2772 }, 'NZ': { lat: -40.9006, lng: 174.8860 },
+    'UA': { lat: 48.3794, lng: 31.1656 }, 'RO': { lat: 45.9432, lng: 24.9668 },
+    'CZ': { lat: 49.8175, lng: 15.4730 }, 'HU': { lat: 47.1625, lng: 19.5033 }
+  };
+
+  // Navigate to cities from a specific country (called when flag is clicked)
+  function navigateToCitiesFromCountry(countryCode) {
+    const countryName = countryCodeToName[countryCode];
+
+    // Find all city indices matching this country
+    const matchingIndices = [];
+    worldCapitals.forEach((city, index) => {
+      if (city.country === countryName) {
+        matchingIndices.push(index);
+      }
+    });
+
+    if (matchingIndices.length > 0) {
+      // Found cities from this country - jump to the first one
+      currentCityIndex = matchingIndices[0];
+      showCity(currentCityIndex);
+
+      // Brief visual feedback
+      cityLabel.style.transition = 'transform 0.2s ease';
+      cityLabel.style.transform = 'scale(1.1)';
+      setTimeout(() => {
+        cityLabel.style.transform = 'scale(1)';
+      }, 200);
+    } else {
+      // No cities from this country - find the closest available city
+      const coords = countryCoordinates[countryCode];
+      if (coords) {
+        let closestIndex = 0;
+        let closestDistance = Infinity;
+
+        worldCapitals.forEach((city, index) => {
+          const dist = getDistance(coords.lat, coords.lng, city.lat, city.lng);
+          if (dist < closestDistance) {
+            closestDistance = dist;
+            closestIndex = index;
+          }
+        });
+
+        currentCityIndex = closestIndex;
+        showCity(currentCityIndex);
+
+        // Show "nearest" indicator
+        const originalLabel = cityLabel.textContent;
+        cityLabel.textContent = `📍 ${worldCapitals[closestIndex].city}, ${worldCapitals[closestIndex].country} (nearest)`;
+        setTimeout(() => {
+          cityLabel.textContent = originalLabel.replace(' (nearest)', '');
+        }, 3000);
+      }
+    }
+  }
 
   // Calculate distance between two points using Haversine formula
   function getDistance(lat1, lng1, lat2, lng2) {
