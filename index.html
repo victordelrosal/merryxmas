@@ -158,6 +158,7 @@
       pointer-events: none;
       perspective: 1000px;
       overflow: hidden;
+      z-index: 500;
     }
     .snowflake {
       position: absolute;
@@ -172,10 +173,10 @@
     }
     @keyframes fall {
       0% { transform: translateY(-5vh) translateX(0); }
-      25% { transform: translateY(25vh) translateX(8vw); }
-      50% { transform: translateY(50vh) translateX(-5vw); }
-      75% { transform: translateY(75vh) translateX(12vw); }
-      100% { transform: translateY(105vh) translateX(15vw); }
+      25% { transform: translateY(25vh) translateX(2vw); }
+      50% { transform: translateY(50vh) translateX(-1vw); }
+      75% { transform: translateY(75vh) translateX(3vw); }
+      100% { transform: translateY(105vh) translateX(2vw); }
     }
     @keyframes spin3d {
       0% { transform: rotateY(0deg); }
@@ -1443,6 +1444,45 @@
         opacity: 0; 
         transform: scale(0.4) translate(0, 15px);
       }
+    }
+
+    /* Button Micro-interactions - Premium Feel */
+    .control-icon:hover,
+    .control-btn:hover,
+    .musicbar-play-btn:hover,
+    .musicbar-skip-btn:hover,
+    .musicbar-icon-btn:hover,
+    .fullscreen-btn-corner:hover,
+    .random-btn:hover,
+    .city-nav:hover {
+      transform: scale(1.08) translateY(-1px);
+      box-shadow: 0 0 20px rgba(255,200,100,0.15);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .control-icon:active,
+    .control-btn:active,
+    .musicbar-play-btn:active,
+    .musicbar-skip-btn:active,
+    .musicbar-icon-btn:active,
+    .fullscreen-btn-corner:active,
+    .random-btn:active,
+    .city-nav:active {
+      transform: scale(0.96) translateY(0);
+      transition: all 0.1s ease;
+    }
+    
+    /* Enhanced glow on focus for accessibility */
+    .control-icon:focus,
+    .control-btn:focus,
+    .musicbar-play-btn:focus,
+    .musicbar-skip-btn:focus,
+    .musicbar-icon-btn:focus,
+    .fullscreen-btn-corner:focus,
+    .random-btn:focus,
+    .city-nav:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(255,215,0,0.3), 0 0 25px rgba(255,200,100,0.2);
     }
 
     /* ==================== MOBILE STYLES ==================== */
@@ -2715,8 +2755,13 @@
 
   // Snow toggle
   const toggleSnowBtn = document.getElementById('toggleSnow');
+  // Ensure snow is visible initially
+  const snow = document.getElementById('snow');
+  if (snow.style.display === '') {
+    snow.style.display = 'block';
+  }
+  
   toggleSnowBtn.addEventListener('click', () => {
-    const snow = document.getElementById('snow');
     const isVisible = snow.style.display !== 'none';
     snow.style.display = isVisible ? 'none' : 'block';
     toggleSnowBtn.textContent = isVisible ? 'Snow Off' : 'Snow On';
@@ -3760,7 +3805,6 @@
     { city: 'Madrid', country: 'Spain', lat: 40.4168, lng: -3.7038, url: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=1920&q=80' },
     { city: 'Amsterdam', country: 'Netherlands', lat: 52.3676, lng: 4.9041, url: 'https://images.unsplash.com/photo-1534351590666-13e3e96b5017?w=1920&q=80' },
     { city: 'Vienna', country: 'Austria', lat: 48.2082, lng: 16.3738, url: 'https://images.unsplash.com/photo-1516550893923-42d28e5677af?w=1920&q=80' },
-    { city: 'Moscow', country: 'Russia', lat: 55.7558, lng: 37.6173, url: 'https://images.unsplash.com/photo-1513326738677-b964603b136d?w=1920&q=80' },
     { city: 'Singapore', country: 'Singapore', lat: 1.3521, lng: 103.8198, url: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=1920&q=80' },
     { city: 'Tokyo', country: 'Japan', lat: 35.6762, lng: 139.6503, url: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1920&q=80' },
     { city: 'Beijing', country: 'China', lat: 39.9042, lng: 116.4074, url: 'https://images.unsplash.com/photo-1508804185872-d7badad00f7d?w=1920&q=80' },
