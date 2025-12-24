@@ -133,7 +133,11 @@
       transform: translateY(-50%) scale(0.95);
     }
     .city-nav-prev {
-      left: 20px;
+      left: 60px;
+      transition: left 0.6s cubic-bezier(0.32, 0.72, 0, 1), all 0.2s ease;
+    }
+    .city-nav-prev.sidebar-open {
+      left: 240px;
     }
     .city-nav-next {
       right: 20px;
@@ -2607,13 +2611,15 @@
   const sidebarToggle = document.getElementById('sidebarToggle');
   const musicbarEl = document.getElementById('musicbar');
   const cityLabelEl = document.getElementById('cityLabel');
+  const cityNavPrev = document.getElementById('cityPrev');
 
   function toggleSidebar() {
     sidebar.classList.toggle('expanded');
     const isExpanded = sidebar.classList.contains('expanded');
-    // Sync musicbar and city label position with sidebar state
+    // Sync musicbar, city label, and nav position with sidebar state
     musicbarEl.classList.toggle('sidebar-open', isExpanded);
     cityLabelEl.classList.toggle('sidebar-open', isExpanded);
+    cityNavPrev.classList.toggle('sidebar-open', isExpanded);
   }
 
   sidebarToggle.addEventListener('click', toggleSidebar);
