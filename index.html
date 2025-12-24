@@ -2441,6 +2441,11 @@
   document.addEventListener('keydown', (e) => {
     if (e.key.toLowerCase() === 'n' && !e.ctrlKey && !e.metaKey) {
       if (currentMode === MODE.TREE) {
+        // Hide image overlay so animation is better appreciated
+        const imgOverlay = document.getElementById('imageOverlay');
+        if (imgOverlay) {
+          imgOverlay.classList.remove('visible', 'happy-ny');
+        }
         // Start the morph sequence
         transitionToMode(MODE.MORPH_TO_FIREWORKS);
       } else if (currentMode === MODE.NEW_YEAR) {
