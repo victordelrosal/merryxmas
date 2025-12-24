@@ -1414,6 +1414,34 @@
       pointer-events: none !important;
     }
 
+    /* Mouse Sparkle Trail */
+    .sparkle-trail {
+      position: fixed;
+      pointer-events: none;
+      z-index: 75;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, rgba(255,215,0,0.9) 0%, rgba(255,195,90,0.6) 40%, transparent 70%);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(255,215,0,0.6), 0 0 12px rgba(255,195,90,0.3);
+      animation: sparkleFade 1.2s ease-out forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes sparkleFade {
+      0% { 
+        opacity: 0; 
+        transform: scale(0) translate(0, 0);
+      }
+      20% { 
+        opacity: 1; 
+        transform: scale(1.2) translate(0, 0);
+      }
+      100% { 
+        opacity: 0; 
+        transform: scale(0.4) translate(0, 15px);
+      }
+    }
+
     /* ==================== MOBILE STYLES ==================== */
     @media screen and (max-width: 768px) {
       /* Hide sidebar completely on mobile */
@@ -2624,6 +2652,53 @@
 
   sidebarToggle.addEventListener('click', toggleSidebar);
 
+  // Mouse-activated sparkle trail
+  let mouseX = 0, mouseY = 0;
+  let lastSparkleTime = 0;
+  const sparkleDelay = 80; // milliseconds between sparkles
+  const maxSparkles = 3; // 2-3 sparkles as specified
+  
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    
+    const now = performance.now();
+    if (now - lastSparkleTime > sparkleDelay) {
+      createSparkle(mouseX, mouseY);
+      lastSparkleTime = now;
+    }
+  });
+  
+  function createSparkle(x, y) {
+    // Remove old sparkles if we have too many
+    const existingSparkles = document.querySelectorAll('.sparkle-trail');
+    if (existingSparkles.length >= maxSparkles) {
+      existingSparkles[0].remove();
+    }
+    
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle-trail';
+    sparkle.style.left = (x - 3) + 'px'; // Center the 6px sparkle
+    sparkle.style.top = (y - 3) + 'px';
+    
+    // Add gentle fade when near tree (center of screen)
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+    const maxDistance = Math.min(window.innerWidth, window.innerHeight) / 2;
+    const proximityFactor = Math.max(0.3, 1 - (distance / maxDistance));
+    
+    // Adjust opacity based on proximity to tree
+    sparkle.style.opacity = proximityFactor;
+    
+    document.body.appendChild(sparkle);
+    
+    // Remove sparkle after animation completes
+    setTimeout(() => {
+      sparkle.remove();
+    }, 1200);
+  }
+
   // Clicking icons toggles the control (works in both collapsed and expanded modes)
   document.querySelectorAll('.control-icon').forEach(icon => {
     icon.addEventListener('click', (e) => {
@@ -3668,6 +3743,12 @@
   const worldCapitals = [
     { city: 'Mexico City', country: 'Mexico', lat: 19.4326, lng: -99.1332, url: 'https://images.unsplash.com/photo-1585464231875-d9ef1f5ad396?w=1920&q=80' },
     { city: 'New York', country: 'USA', lat: 40.7128, lng: -74.0060, url: 'https://images.unsplash.com/photo-1534430480872-3498386e7856?w=1920&q=80' },
+    { city: 'Los Angeles', country: 'USA', lat: 34.0522, lng: -118.2437, url: 'https://images.unsplash.com/photo-1534190760961-74e8c1c5c3da?w=1920&q=80' },
+    { city: 'Chicago', country: 'USA', lat: 41.8781, lng: -87.6298, url: 'https://images.unsplash.com/photo-1494522855154-9297ac14b55f?w=1920&q=80' },
+    { city: 'Washington D.C.', country: 'USA', lat: 38.9072, lng: -77.0369, url: 'https://images.unsplash.com/photo-1501466044931-62695aada8e9?w=1920&q=80' },
+    { city: 'San Francisco', country: 'USA', lat: 37.7749, lng: -122.4194, url: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1920&q=80' },
+    { city: 'Miami', country: 'USA', lat: 25.7617, lng: -80.1918, url: 'https://images.unsplash.com/photo-1506966953602-c20cc11f75e3?w=1920&q=80' },
+    { city: 'Las Vegas', country: 'USA', lat: 36.1699, lng: -115.1398, url: 'https://images.unsplash.com/photo-1581351721010-8cf859cb14a4?w=1920&q=80' },
     { city: 'London', country: 'UK', lat: 51.5074, lng: -0.1278, url: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1920&q=80' },
     { city: 'Paris', country: 'France', lat: 48.8566, lng: 2.3522, url: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=1920&q=80' },
     { city: 'Dublin', country: 'Ireland', lat: 53.3498, lng: -6.2603, url: 'https://images.unsplash.com/photo-1549918864-48ac978761a4?w=1920&q=80' },
