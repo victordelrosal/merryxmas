@@ -172,7 +172,10 @@
     }
     @keyframes fall {
       0% { transform: translateY(-5vh) translateX(0); }
-      100% { transform: translateY(105vh) translateX(20vw); }
+      25% { transform: translateY(25vh) translateX(8vw); }
+      50% { transform: translateY(50vh) translateX(-5vw); }
+      75% { transform: translateY(75vh) translateX(12vw); }
+      100% { transform: translateY(105vh) translateX(15vw); }
     }
     @keyframes spin3d {
       0% { transform: rotateY(0deg); }
@@ -3048,9 +3051,9 @@
 
     // Layer config: [count%, speedMult, sizeRange, opacityRange, blur, spin]
     const layers = [
-      { pct: 0.25, speedMult: 2.5, size: [6, 10],  opacity: [0.2, 0.35], blur: [2.5, 4], spin: false },  // Back - blurry, slow
-      { pct: 0.35, speedMult: 1.5, size: [8, 14],  opacity: [0.35, 0.55], blur: [1, 2], spin: true },    // Mid
-      { pct: 0.40, speedMult: 1.0, size: [12, 22], opacity: [0.6, 0.9], blur: [0, 0], spin: true }       // Front - crisp, fast
+      { pct: 0.25, speedMult: 2.5, size: [4, 8],  opacity: [0.15, 0.3], blur: [3, 5], spin: false },  // Back - tiny, blurry, slow
+      { pct: 0.35, speedMult: 1.5, size: [8, 14], opacity: [0.35, 0.55], blur: [1, 2], spin: true },    // Mid
+      { pct: 0.40, speedMult: 1.0, size: [16, 28], opacity: [0.7, 0.95], blur: [0, 0], spin: true }       // Front - large, crisp, fast
     ];
 
     layers.forEach(layer => {
